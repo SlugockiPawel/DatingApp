@@ -1,4 +1,6 @@
 using DatingApp.Data;
+using DatingApp.Repos;
+using DatingApp.Repos.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"),
         o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddScoped<IAppUserRepo, PostgresAppUserRepo>();
+
 
 var app = builder.Build();
 
