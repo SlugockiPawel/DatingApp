@@ -38,7 +38,7 @@ app.UseAuthorization();
 // app.UseRouting();
 app.UseCors(policy =>
 {
-    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200");
 });
 
 app.MapControllers();
