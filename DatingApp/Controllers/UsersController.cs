@@ -1,19 +1,17 @@
 ﻿using DatingApp.Data;
 using DatingApp.Models;
-using DatingApp.Repos.Interfaces;
+using DatingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DatingApp.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class UsersController : ControllerBase
+public class UsersController : BaseApiController
 {
-    private readonly IAppUserRepo _userRepo;
+    private readonly IUserService _userRepo;
 
-    public UsersController(IAppUserRepo userRepo)
+    public UsersController(IUserService userRepo)
     {
         _userRepo = userRepo;
     }
