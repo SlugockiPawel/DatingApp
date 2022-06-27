@@ -1,6 +1,7 @@
 ﻿using DatingApp.Data;
 using DatingApp.Models;
 using DatingApp.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,6 +20,7 @@ public class UsersController : BaseApiController
 
     // GET: api/<UsersController>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsersAsync()
     {
         var users = await _userRepo.GetAllUsersAsync();
@@ -27,6 +29,7 @@ public class UsersController : BaseApiController
 
     // GET api/<UsersController>/5
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<AppUser>> GetUserAsync(Guid id)
     {
         var user = await _userRepo.GetUserByIdAsync(id);
