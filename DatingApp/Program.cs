@@ -19,6 +19,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<IUserService, UserServicePostgres>();
 
+builder.Services.AddCors();
+
 
 var app = builder.Build();
 
@@ -32,6 +34,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+// app.UseRouting();
+app.UseCors(policy =>
+{
+    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200");
+});
 
 app.MapControllers();
 
