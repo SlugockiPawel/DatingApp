@@ -11,10 +11,13 @@ namespace DatingApp.Services
     public class UserServicePostgres : IUserService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ITokenService _tokenService;
 
-        public UserServicePostgres(ApplicationDbContext context)
+
+        public UserServicePostgres(ApplicationDbContext context, ITokenService tokenService)
         {
             _context = context;
+            _tokenService = tokenService;
         }
 
         public async Task<IEnumerable<AppUser>> GetAllUsersAsync()
@@ -32,7 +35,7 @@ namespace DatingApp.Services
             return await _context.Users.SingleOrDefaultAsync(u => u.Name.Equals(name));
         }
 
-        public async Task<AppUser> RegisterUserAsync(RegisterDto registerDto)
+        public async Task<UserDto> RegisterUserAsync(RegisterDto registerDto)
         {
             using var hmac = new HMACSHA512();
 
@@ -46,7 +49,11 @@ namespace DatingApp.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return new UserDto()
+            {
+                Name = user.Name,
+                Token = _tokenService.CreateToken(user)
+            };
         }
         public async Task<bool> UserExistAsync(string username)
         {

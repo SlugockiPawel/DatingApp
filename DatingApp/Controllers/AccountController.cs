@@ -11,15 +11,17 @@ namespace DatingApp.Controllers
     public class AccountController : BaseApiController
     {
         private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, ITokenService tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
         }
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if (await _userService.UserExistAsync(registerDto.Name))
             {
@@ -30,7 +32,7 @@ namespace DatingApp.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _userService.GetUserByNameAsync(loginDto.Name);
 
@@ -51,7 +53,11 @@ namespace DatingApp.Controllers
                 }
             }
 
-            return user;
+            return new UserDto
+            {
+                Name = user.Name,
+                Token = _tokenService.CreateToken(user),
+            };
         }
     }
 }
