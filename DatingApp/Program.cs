@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<IUserService, UserServicePostgres>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddCors();
 
