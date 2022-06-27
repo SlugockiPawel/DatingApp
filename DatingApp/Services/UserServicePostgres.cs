@@ -27,6 +27,11 @@ namespace DatingApp.Services
             return await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(id));
         }
 
+        public async Task<AppUser> GetUserByNameAsync(string name)
+        {
+            return await _context.Users.SingleOrDefaultAsync(u => u.Name.Equals(name));
+        }
+
         public async Task<AppUser> RegisterUserAsync(RegisterDto registerDto)
         {
             using var hmac = new HMACSHA512();
