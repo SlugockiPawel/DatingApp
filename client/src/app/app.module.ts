@@ -14,7 +14,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { MemberListComponent } from './components/members/member-list/member-list.component';
 import { MemberDetailComponent } from './components/members/member-detail/member-detail.component';
 import { ListsComponent } from './components/lists/lists.component';
-import { MessagesComponent } from './components/messages/messages.component'
+import { MessagesComponent } from './components/messages/messages.component';
+import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MessagesComponent } from './components/messages/messages.component'
     MemberListComponent,
     MemberDetailComponent,
     ListsComponent,
-    MessagesComponent
+    MessagesComponent,
+    TestErrorsComponent
   ],
   imports: [
     BrowserModule,
