@@ -1,6 +1,7 @@
 using System.Text;
 using DatingApp.Data;
 using DatingApp.Extensions;
+using DatingApp.Middleware;
 using DatingApp.Services;
 using DatingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,6 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
