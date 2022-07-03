@@ -17,6 +17,7 @@ import { MemberDetailComponent } from './components/members/member-detail/member
 import { ListsComponent } from './components/lists/lists.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
+import { NotFoundComponent } from './errors/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
     ListsComponent,
     MessagesComponent,
     TestErrorsComponent
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
