@@ -18,6 +18,8 @@ namespace DatingApp.Models
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+
+        // Navigation property 1 User => many Photos
         public ICollection<Photo> Photos { get; set; }
 
         public int GetAge()
