@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.Controllers;
 
+[Authorize]
 public class UsersController : BaseApiController
 {
     private readonly IUserService _userRepo;
@@ -20,7 +21,6 @@ public class UsersController : BaseApiController
 
     // GET: api/<UsersController>
     [HttpGet]
-    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsersAsync()
     {
         var users = await _userRepo.GetAllUsersAsync();
@@ -29,7 +29,6 @@ public class UsersController : BaseApiController
 
     // GET api/<UsersController>/5
     [HttpGet("{id}")]
-    [Authorize]
     public async Task<ActionResult<AppUser>> GetUserAsync(Guid id)
     {
         var user = await _userRepo.GetUserByIdAsync(id);
