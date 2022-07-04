@@ -27,6 +27,10 @@ builder.AddIdentityServices(); // custom extension method IdentityServiceExtensi
 
 var app = builder.Build();
 
+// Seed Data
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // enable legacy DateTime behavior
+await Seed.ManageDataAsync(app);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
