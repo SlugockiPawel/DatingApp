@@ -5,6 +5,8 @@ namespace DatingApp.Services.Interfaces
 {
     public interface IUserService
     {
+        void Update(AppUser user);
+        Task<bool> SaveAllAsync();
         Task<IEnumerable<AppUser>> GetAllUsersAsync();
         Task<AppUser> GetUserByIdAsync(Guid id);
         Task<AppUser> GetUserByNameAsync(string name);

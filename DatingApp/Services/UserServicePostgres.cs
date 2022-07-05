@@ -20,19 +20,27 @@ namespace DatingApp.Services
             _tokenService = tokenService;
         }
 
+
         public async Task<IEnumerable<AppUser>> GetAllUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .Include(u => u.Photos)
+                .ToListAsync();
         }
 
         public async Task<AppUser> GetUserByIdAsync(Guid id)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(id));
+            // return await _context.Users.FindAsync(id);
+            return await _context.Users
+                .Include(u => u.Photos)
+                .SingleOrDefaultAsync(u => u.Id.Equals(id));
         }
 
         public async Task<AppUser> GetUserByNameAsync(string name)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Name.Equals(name));
+            return await _context.Users
+                .Include(u => u.Photos)
+                .SingleOrDefaultAsync(u => u.Name.Equals(name));
         }
 
         public async Task<UserDto> RegisterUserAsync(RegisterDto registerDto)
@@ -55,6 +63,17 @@ namespace DatingApp.Services
                 Token = _tokenService.CreateToken(user)
             };
         }
+
+        public void Update(AppUser user)
+        {
+            _context.Entry(user).State = EntityState.Modified;
+        }
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
         public async Task<bool> UserExistAsync(string username)
         {
             return await _context.Users.AnyAsync(u => u.Name.Equals(username.ToLower()));
