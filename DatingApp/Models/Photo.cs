@@ -11,7 +11,7 @@ namespace DatingApp.Models
         public string PublicId { get; set; }
 
         // Navigation property 1 User => many photos
-        public AppUser AppUser { get; set; }
+        public virtual AppUser AppUser { get; set; }
         public Guid AppUserId { get; set; }
 
     }
