@@ -1,6 +1,7 @@
 using System.Text;
 using DatingApp.Data;
 using DatingApp.Extensions;
+using DatingApp.Helpers;
 using DatingApp.Middleware;
 using DatingApp.Services;
 using DatingApp.Services.Interfaces;
@@ -24,6 +25,7 @@ builder.Services.AddCors();
 
 builder.AddIdentityServices(); // custom extension method IdentityServiceExtensions to clean up Program.cs
 
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
 var app = builder.Build();
 
