@@ -12,5 +12,7 @@ namespace DatingApp.Services.Interfaces
         Task<AppUser> GetUserByNameAsync(string name);
         Task<UserDto> RegisterUserAsync(RegisterDto registerDto);
         Task<bool> UserExistAsync(string username);
+        Task<IEnumerable<MemberDto>> GetMembersAsync();
+        Task<MemberDto> GetMemberByNameAsync(string name);
     }
 }
