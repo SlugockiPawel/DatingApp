@@ -6,6 +6,7 @@ namespace DatingApp.DTOs
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string PhotoUrl { get; set; }
         public int Age{ get; set; }
         public string KnownAs { get; set; }
         public DateTime Created { get; set; }
@@ -18,6 +19,6 @@ namespace DatingApp.DTOs
         public string Country { get; set; }
 
         // Navigation property 1 User => many Photos
-        public virtual ICollection<PhotoDto> Photos { get; set; }
+        public ICollection<PhotoDto> Photos { get; set; }
     }
 }
