@@ -22,9 +22,11 @@ namespace DatingApp.Models
         // Navigation property 1 User => many Photos
         public virtual ICollection<Photo> Photos { get; set; }
 
-        public int GetAge()
-        {
-            return DateOfBirth.CalculateAge();
-        }
+        // AutoMapper will run GetAge() when MemberDto Age property will be evaluated (automatically)
+        // it is not most efficent, so better use Extension method in mapper profiles configuration
+        // public int GetAge()
+        // {
+        //     return DateOfBirth.CalculateAge();
+        // }
     }
 }
