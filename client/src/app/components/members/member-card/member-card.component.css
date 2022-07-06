@@ -1,0 +1,35 @@
+.card:hover {
+  transform: scale(1.2,1.2);
+  transition-duration: 500ms;
+  transition-timing-function: ease-out;
+  opacity: 0.7;
+}
+
+.card-img-wrapper {
+  position: relative;
+}
+
+.card-img-wrapper .btn {
+  padding: 3px 7px;
+}
+
+.animate {
+  transition: all 0.3s ease-in-out;
+}
+
+.member-icons
+ {
+  padding: 1px;
+  position: absolute;
+  bottom: -30%;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  opacity: 0;
+ }
+
+ .card-img-wrapper:hover .member-icons {
+  bottom: 0;
+  opacity: 1;
+}
