@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.Controllers;
 
-[Authorize]
+// [Authorize]
 public class UsersController : BaseApiController
 {
     private readonly IUserService _userRepo;
