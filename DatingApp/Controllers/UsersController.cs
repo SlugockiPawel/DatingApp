@@ -23,7 +23,6 @@ public class UsersController : BaseApiController
         _mapper = mapper;
     }
 
-
     // GET: api/<UsersController>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsersAsync()
@@ -70,16 +69,5 @@ public class UsersController : BaseApiController
         return await _userRepo.SaveAllAsync() ? NoContent() : BadRequest("Failed to update user");
     }
 
-
-    // POST api/<UsersController>
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
-    }
-
-    // DELETE api/<UsersController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-    }
+    
 }
