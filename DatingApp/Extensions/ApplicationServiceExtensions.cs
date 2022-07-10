@@ -1,4 +1,5 @@
 ﻿using DatingApp.Data;
+using DatingApp.Helpers;
 using DatingApp.Services;
 using DatingApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace DatingApp.Extensions
 
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IUserService, UserServicePostgres>();
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
             return builder;
         }
