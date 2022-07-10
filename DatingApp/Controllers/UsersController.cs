@@ -2,6 +2,7 @@
 using AutoMapper;
 using DatingApp.Data;
 using DatingApp.DTOs;
+using DatingApp.Extensions;
 using DatingApp.Models;
 using DatingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -60,8 +61,7 @@ public class UsersController : BaseApiController
     public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
     {
         // get username based on the token value
-        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = await _userRepo.GetUserByNameAsync(username);
+        var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
 
         _mapper.Map(memberUpdateDto, user);
         _userRepo.Update(user);
