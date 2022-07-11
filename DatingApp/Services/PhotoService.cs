@@ -10,7 +10,7 @@ public class PhotoService : IPhotoService
 {
     private readonly Cloudinary _cloudinary;
 
-    public PhotoService(Cloudinary cloudinary, IOptions<CloudinarySettings> cloudinaryConfig)
+    public PhotoService(IOptions<CloudinarySettings> cloudinaryConfig)
     {
         var cloudinaryAccount = new Account()
         {
