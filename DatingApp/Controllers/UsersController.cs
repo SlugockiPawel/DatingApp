@@ -28,7 +28,7 @@ public class UsersController : BaseApiController
 
     // GET: api/<UsersController>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsersAsync()
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
     {
         // var users = await _userRepo.GetAllUsersAsync();
         var mappedUsers = await _userRepo.GetMembersAsync();
@@ -38,7 +38,7 @@ public class UsersController : BaseApiController
 
     // GET api/<UsersController>/5
     [HttpGet("search-id/{id}")]
-    public async Task<ActionResult<MemberDto>> GetUserAsync(Guid id)
+    public async Task<ActionResult<MemberDto>> GetUser(Guid id)
     {
         // old style, to show how to map using autoMapper
         var user = await _userRepo.GetUserByIdAsync(id);
@@ -48,8 +48,8 @@ public class UsersController : BaseApiController
     }
 
     // GET api/<UsersController>/5
-    [HttpGet("{name}")]
-    public async Task<ActionResult<MemberDto>> GetUserByNameAsync(string name)
+    [HttpGet("{name}", Name = "GetUserByName")]
+    public async Task<ActionResult<MemberDto>> GetUserByName(string name)
     {
         // we map entity using autoMapper directly in the repo query
 
