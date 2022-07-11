@@ -17,11 +17,13 @@ public class UsersController : BaseApiController
 {
     private readonly IUserService _userRepo;
     private readonly IMapper _mapper;
+    private readonly IPhotoService _photoService;
 
-    public UsersController(IUserService userRepo, IMapper mapper)
+    public UsersController(IUserService userRepo, IMapper mapper, IPhotoService photoService)
     {
         _userRepo = userRepo;
         _mapper = mapper;
+        _photoService = photoService;
     }
 
     // GET: api/<UsersController>
@@ -69,5 +71,32 @@ public class UsersController : BaseApiController
         return await _userRepo.SaveAllAsync() ? NoContent() : BadRequest("Failed to update user");
     }
 
+    [HttpPost("add-photo")]
+    public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
+    {
+        var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
+        var result = await _photoService.AddPhotoAsync(file);
+        if (result.Error is not null) return BadRequest(result.Error.Message);
+
+        var photo = new Photo()
+        {
+            Url = result.SecureUrl.AbsolutePath,
+            PublicId = result.PublicId,
+        };
+
+        if (user.Photos.Count == 0)
+        {
+            photo.IsMain = true;
+        }
+        
+        user.Photos.Add(photo);
+
+        if (await _userRepo.SaveAllAsync())
+        {
+            return _mapper.Map<PhotoDto>(photo);
+        }
+
+        return BadRequest("Problem adding photo");
+    }
     
 }
