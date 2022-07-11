@@ -88,15 +88,15 @@ public class UsersController : BaseApiController
         {
             photo.IsMain = true;
         }
-        
+
         user.Photos.Add(photo);
 
         if (await _userRepo.SaveAllAsync())
         {
-            return _mapper.Map<PhotoDto>(photo);
+            return CreatedAtRoute(nameof(GetUserByName), new { name = user.Name }, _mapper.Map<PhotoDto>(photo));
+            // return _mapper.Map<PhotoDto>(photo);
         }
 
         return BadRequest("Problem adding photo");
     }
-    
 }
