@@ -22,7 +22,7 @@ namespace DatingApp.Controllers
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
-        {
+        { 
             if (await _userService.UserExistAsync(registerDto.Name))
             {
                 return BadRequest("Username is taken");
@@ -57,6 +57,7 @@ namespace DatingApp.Controllers
             {
                 Name = user.Name,
                 Token = _tokenService.CreateToken(user),
+                MainPhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url
             };
         }
     }
