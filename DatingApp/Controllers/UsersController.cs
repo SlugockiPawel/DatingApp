@@ -37,7 +37,7 @@ public class UsersController : BaseApiController
     }
 
     // GET api/<UsersController>/5
-    [HttpGet("search-id/{id}")]
+    [HttpGet("search-id/{id:guid}")]
     public async Task<ActionResult<MemberDto>> GetUser(Guid id)
     {
         // old style, to show how to map using autoMapper
@@ -100,7 +100,7 @@ public class UsersController : BaseApiController
         return BadRequest("Problem adding photo");
     }
 
-    [HttpPut("set-main-photo/{photoId}")]
+    [HttpPut("set-main-photo/{photoId:int}")]
     public async Task<ActionResult> SetMainPhoto(int photoId)
     {
         var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
