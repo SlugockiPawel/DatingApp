@@ -5,9 +5,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
@@ -50,6 +49,7 @@ import { PhotoEditorComponent } from './components/members/photo-editor/photo-ed
     HttpClientModule,
     TooltipModule,
     FormsModule,
+    ReactiveFormsModule,
     NgxSpinnerModule,
     SharedModule
   ],
