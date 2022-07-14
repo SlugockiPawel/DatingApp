@@ -14,12 +14,16 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   passwordMinLength: number = 6;
   passwordMaxLength: number = 12;
+  minUserAGe: number = 18;
+  maxDate: Date;
 
   constructor(private accountService: AccountService, private toastr: ToastrService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.maxDate = new Date();
+    this.maxDate.setFullYear(this.maxDate.getFullYear() - this.minUserAGe);
   }
 
   initializeForm() {

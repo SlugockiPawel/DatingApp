@@ -26,6 +26,7 @@ import {LoadingInterceptor} from "./_interceptors/loading.interceptor";
 import { PhotoEditorComponent } from './components/members/photo-editor/photo-editor.component';
 import { TextInputComponent } from './components/forms/text-input/text-input.component';
 import { FormControlPipe } from './_pipes/form-control.pipe';
+import { DateInputComponent } from './components/forms/date-input/date-input.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { FormControlPipe } from './_pipes/form-control.pipe';
     MemberEditComponent,
     PhotoEditorComponent,
     TextInputComponent,
-    FormControlPipe
+    FormControlPipe,
+    DateInputComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +57,7 @@ import { FormControlPipe } from './_pipes/form-control.pipe';
     FormsModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
