@@ -24,6 +24,8 @@ import { MemberEditComponent } from './components/members/member-edit/member-edi
 import {NgxSpinnerModule} from "ngx-spinner";
 import {LoadingInterceptor} from "./_interceptors/loading.interceptor";
 import { PhotoEditorComponent } from './components/members/photo-editor/photo-editor.component';
+import { TextInputComponent } from './components/forms/text-input/text-input.component';
+import { FormControlPipe } from './_pipes/form-control.pipe';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { PhotoEditorComponent } from './components/members/photo-editor/photo-ed
     ServerErrorComponent,
     MemberCardComponent,
     MemberEditComponent,
-    PhotoEditorComponent
+    PhotoEditorComponent,
+    TextInputComponent,
+    FormControlPipe
   ],
   imports: [
     BrowserModule,
