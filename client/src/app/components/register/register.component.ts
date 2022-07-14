@@ -1,7 +1,7 @@
 import {ToastrService} from 'ngx-toastr';
 import {AccountService} from './../../_services/account.service';
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-register',
@@ -12,6 +12,8 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
   model: any = {};
   registerForm: FormGroup;
+  passwordMinLength: number = 6;
+  passwordMaxLength: number = 12;
 
   constructor(private accountService: AccountService, private toastr: ToastrService) {
   }
@@ -24,10 +26,21 @@ export class RegisterComponent implements OnInit {
     this.registerForm = new FormGroup({
       name: new FormControl('', Validators.required),
       password: new FormControl('',
-        [Validators.required, Validators.minLength(6),
-                        Validators.maxLength(20)]),
-      confirmPassword: new FormControl('', Validators.required),
+        [Validators.required, Validators.minLength(this.passwordMinLength),
+          Validators.maxLength(this.passwordMaxLength)]),
+      confirmPassword: new FormControl('',
+        [Validators.required, this.matchValues('password')]),
     });
+    this.registerForm.controls.password.valueChanges.subscribe(()=> {
+      this.registerForm.controls.confirmPassword.updateValueAndValidity();
+    });
+  }
+
+  matchValues(matchTo: string): ValidatorFn {
+    return (control: AbstractControl) => {
+      return control?.value === control?.parent?.controls[matchTo].value
+        ? null : {isMatching: true}
+    }
   }
 
   register() {
