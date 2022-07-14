@@ -1,7 +1,7 @@
 import {ToastrService} from 'ngx-toastr';
 import {AccountService} from './../../_services/account.service';
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-register',
@@ -15,7 +15,7 @@ export class RegisterComponent implements OnInit {
   passwordMinLength: number = 6;
   passwordMaxLength: number = 12;
 
-  constructor(private accountService: AccountService, private toastr: ToastrService) {
+  constructor(private accountService: AccountService, private toastr: ToastrService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -23,15 +23,20 @@ export class RegisterComponent implements OnInit {
   }
 
   initializeForm() {
-    this.registerForm = new FormGroup({
-      name: new FormControl('', Validators.required),
-      password: new FormControl('',
+    this.registerForm = this.formBuilder.group({
+      gender: ['male'],
+      name: ['', Validators.required],
+      knownAs: ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      password: ['',
         [Validators.required, Validators.minLength(this.passwordMinLength),
-          Validators.maxLength(this.passwordMaxLength)]),
-      confirmPassword: new FormControl('',
-        [Validators.required, this.matchValues('password')]),
+          Validators.maxLength(this.passwordMaxLength)]],
+      confirmPassword: ['',
+        [Validators.required, this.matchValues('password')]],
     });
-    this.registerForm.controls.password.valueChanges.subscribe(()=> {
+    this.registerForm.controls.password.valueChanges.subscribe(() => {
       this.registerForm.controls.confirmPassword.updateValueAndValidity();
     });
   }
