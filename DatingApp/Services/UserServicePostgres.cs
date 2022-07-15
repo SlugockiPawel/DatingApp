@@ -49,14 +49,13 @@ namespace DatingApp.Services
 
         public async Task<UserDto> RegisterUserAsync(RegisterDto registerDto)
         {
+            var user = _mapper.Map<AppUser>(registerDto);
+
             using var hmac = new HMACSHA512();
 
-            var user = new AppUser
-            {
-                Name = registerDto.Name.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key,
-            };
+            user.Name = registerDto.Name.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -64,7 +63,8 @@ namespace DatingApp.Services
             return new UserDto()
             {
                 Name = user.Name,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs,
             };
         }
 
@@ -92,7 +92,6 @@ namespace DatingApp.Services
 
         public async Task<MemberDto> GetMemberByNameAsync(string name)
         {
-
             // do not need to .Include(u=> u.Photo), mapper and EF will perform left join
             return await _context.Users
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)

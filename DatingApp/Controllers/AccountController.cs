@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using AutoMapper;
 using DatingApp.Data;
 using DatingApp.DTOs;
 using DatingApp.Models;
@@ -22,11 +23,8 @@ namespace DatingApp.Controllers
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
-        { 
-            if (await _userService.UserExistAsync(registerDto.Name))
-            {
-                return BadRequest("Username is taken");
-            }
+        {
+            if (await _userService.UserExistAsync(registerDto.Name)) return BadRequest("Username is taken");
 
             return await _userService.RegisterUserAsync(registerDto);
         }
@@ -57,7 +55,8 @@ namespace DatingApp.Controllers
             {
                 Name = user.Name,
                 Token = _tokenService.CreateToken(user),
-                MainPhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url
+                MainPhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url,
+                KnownAs = user.KnownAs,
             };
         }
     }
