@@ -1,7 +1,7 @@
-import {MembersService} from './../../../_services/members.service';
-import {Member} from './../../../_models/member';
+import {MembersService} from '../../../_services/members.service';
+import {Member} from '../../../_models/member';
 import {Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import {Pagination} from "../../../_models/pagination";
 
 @Component({
   selector: 'app-member-list',
