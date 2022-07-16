@@ -4,12 +4,12 @@ namespace DatingApp.Helpers;
 
 public class PagedList<T> : List<T>
 {
-    private int CurrentPage { get; set; }
-    private int TotalPages { get; set; }
-    private int PageSize { get; set; }
-    private int TotalCount { get; set; }
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
 
-    public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
+    private PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
     {
         CurrentPage = pageNumber;
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
