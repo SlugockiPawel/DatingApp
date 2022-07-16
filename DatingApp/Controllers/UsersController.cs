@@ -3,6 +3,7 @@ using AutoMapper;
 using DatingApp.Data;
 using DatingApp.DTOs;
 using DatingApp.Extensions;
+using DatingApp.Helpers;
 using DatingApp.Models;
 using DatingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -28,12 +29,15 @@ public class UsersController : BaseApiController
 
     // GET: api/<UsersController>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
     {
         // var users = await _userRepo.GetAllUsersAsync();
-        var mappedUsers = await _userRepo.GetMembersAsync();
+        var users = await _userRepo.GetMembersAsync(userParams);
 
-        return Ok(mappedUsers);
+        Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount,
+            users.TotalPages);
+
+        return Ok(users);
     }
 
     // GET api/<UsersController>/5
@@ -130,14 +134,14 @@ public class UsersController : BaseApiController
         var photo = user.Photos.FirstOrDefault(p => p.Id.Equals(photoId));
 
         if (photo is null) return NotFound();
-        
+
         if (photo.IsMain) return BadRequest("You cannot delete main photo");
-        
+
 
         if (photo.PublicId is not null)
         {
             var result = await _photoService.DeletePhotoAsync(photo.PublicId);
-            
+
             if (result.Error is not null) return BadRequest(result.Error.Message);
 
             user.Photos.Remove(photo);
