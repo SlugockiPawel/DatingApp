@@ -2,6 +2,7 @@ import {ToastrService} from 'ngx-toastr';
 import {AccountService} from './../../_services/account.service';
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -10,20 +11,21 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Valid
 })
 export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
-  model: any = {};
   registerForm: FormGroup;
   passwordMinLength: number = 6;
   passwordMaxLength: number = 12;
-  minUserAGe: number = 18;
+  minUserAge: number = 18;
   maxDate: Date;
+  validationErrors: string[] = [];
 
-  constructor(private accountService: AccountService, private toastr: ToastrService, private formBuilder: FormBuilder) {
+  constructor(private accountService: AccountService, private toastr: ToastrService,
+              private formBuilder: FormBuilder, private router: Router) {
   }
 
   ngOnInit(): void {
     this.initializeForm();
     this.maxDate = new Date();
-    this.maxDate.setFullYear(this.maxDate.getFullYear() - this.minUserAGe);
+    this.maxDate.setFullYear(this.maxDate.getFullYear() - this.minUserAge);
   }
 
   initializeForm() {
@@ -53,18 +55,16 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    console.log(this.registerForm.value);
 
-    // this.accountService.registerUser(this.model).subscribe({
-    //   next:  (response) => {
-    //     console.log(response);
-    //     this.cancel();
-    //   },
-    //   error: (error) => {
-    //     console.log(error),
-    //     this.toastr.error(error.error);
-    //   }
-    // });
+
+    this.accountService.registerUser(this.registerForm.value).subscribe({
+      next: (response) => {
+        this.router.navigateByUrl('/members');
+      },
+      error: (error) => {
+        this.validationErrors = error;
+      }
+    });
   }
 
   cancel() {
