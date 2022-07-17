@@ -86,10 +86,15 @@ namespace DatingApp.Services
 
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
+            var minDateOfBirth = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+            var maxDateOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
+
             var query = _context.Users
                 .AsQueryable()
-                .Where(u =>  u.Gender == userParams.Gender &&
-                             u.Name != userParams.CurrentUserName)
+                .Where(u => u.Gender == userParams.Gender &&
+                            u.Name != userParams.CurrentUserName)
+                .Where(u => u.DateOfBirth >= minDateOfBirth &&
+                            u.DateOfBirth <= maxDateOfBirth)
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking();
 
