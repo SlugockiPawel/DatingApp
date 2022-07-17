@@ -15,4 +15,7 @@ public class UserParams
             if (value <= 0) _pageSize = 1;
         }
     }
+
+    public string CurrentUserName { get; set; }
+    public string Gender { get; set; }
 }

@@ -87,6 +87,9 @@ namespace DatingApp.Services
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
             var query = _context.Users
+                .AsQueryable()
+                .Where(u =>  u.Gender == userParams.Gender &&
+                             u.Name != userParams.CurrentUserName)
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking();
 
