@@ -66,6 +66,7 @@ namespace DatingApp.Services
                 Name = user.Name,
                 Token = _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
+                Gender = user.Gender,
             };
         }
 

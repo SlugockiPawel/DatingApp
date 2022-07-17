@@ -57,6 +57,7 @@ namespace DatingApp.Controllers
                 Token = _tokenService.CreateToken(user),
                 MainPhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url,
                 KnownAs = user.KnownAs,
+                Gender = user.Gender,
             };
         }
     }
