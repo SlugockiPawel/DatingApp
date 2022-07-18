@@ -17,12 +17,12 @@ export class MembersService {
   constructor(private http: HttpClient) {
   }
 
-  getMembers(userParams: UserParams): Observable<PaginatedResult<Member[]>> {
+  getMembers(userParams: UserParams) {
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
 
-    params.append('minAge', userParams.minAge);
-    params.append('maxAge', userParams.maxAge);
-    params.append('gender', userParams.gender);
+    params = params.append('minAge', userParams.minAge.toString());
+    params = params.append('maxAge', userParams.maxAge.toString());
+    params = params.append('gender', userParams.gender);
 
     return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params);
   }
@@ -49,7 +49,8 @@ export class MembersService {
   }
 
   deletePhoto(photoId: number) {
-    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+    return this.http.
+    delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 
   private getPaginationHeaders(pageNumber: number, pageSize: number): HttpParams {
