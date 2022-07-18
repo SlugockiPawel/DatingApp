@@ -29,7 +29,9 @@ public class UsersController : BaseApiController
 
     // GET: api/<UsersController>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers(
+        [FromQuery] UserParams userParams
+    )
     {
         var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
         userParams.CurrentUserName = user.Name;
@@ -41,8 +43,12 @@ public class UsersController : BaseApiController
 
         var users = await _userRepo.GetMembersAsync(userParams);
 
-        Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount,
-            users.TotalPages);
+        Response.AddPaginationHeader(
+            users.CurrentPage,
+            users.PageSize,
+            users.TotalCount,
+            users.TotalPages
+        );
 
         return Ok(users);
     }
@@ -87,13 +93,10 @@ public class UsersController : BaseApiController
     {
         var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
         var result = await _photoService.AddPhotoAsync(file);
-        if (result.Error is not null) return BadRequest(result.Error.Message);
+        if (result.Error is not null)
+            return BadRequest(result.Error.Message);
 
-        var photo = new Photo()
-        {
-            Url = result.SecureUrl.AbsoluteUri,
-            PublicId = result.PublicId,
-        };
+        var photo = new Photo() { Url = result.SecureUrl.AbsoluteUri, PublicId = result.PublicId, };
 
         if (user.Photos.Count == 0)
         {
@@ -104,7 +107,11 @@ public class UsersController : BaseApiController
 
         if (await _userRepo.SaveAllAsync())
         {
-            return CreatedAtRoute(nameof(GetUserByName), new { name = user.Name }, _mapper.Map<PhotoDto>(photo));
+            return CreatedAtRoute(
+                nameof(GetUserByName),
+                new { name = user.Name },
+                _mapper.Map<PhotoDto>(photo)
+            );
             // return _mapper.Map<PhotoDto>(photo);
         }
 
@@ -122,14 +129,17 @@ public class UsersController : BaseApiController
             return NotFound();
         }
 
-        if (photo.IsMain) return BadRequest("This Photo is already a main photo");
+        if (photo.IsMain)
+            return BadRequest("This Photo is already a main photo");
 
         var currentMain = user.Photos.FirstOrDefault(p => p.IsMain);
-        if (currentMain is not null) currentMain.IsMain = false;
+        if (currentMain is not null)
+            currentMain.IsMain = false;
 
         photo.IsMain = true;
 
-        if (await _userRepo.SaveAllAsync()) return NoContent();
+        if (await _userRepo.SaveAllAsync())
+            return NoContent();
 
         return BadRequest("Failed to set main photo");
     }
@@ -140,20 +150,23 @@ public class UsersController : BaseApiController
         var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
         var photo = user.Photos.FirstOrDefault(p => p.Id.Equals(photoId));
 
-        if (photo is null) return NotFound();
+        if (photo is null)
+            return NotFound();
 
-        if (photo.IsMain) return BadRequest("You cannot delete main photo");
-
+        if (photo.IsMain)
+            return BadRequest("You cannot delete main photo");
 
         if (photo.PublicId is not null)
         {
             var result = await _photoService.DeletePhotoAsync(photo.PublicId);
 
-            if (result.Error is not null) return BadRequest(result.Error.Message);
+            if (result.Error is not null)
+                return BadRequest(result.Error.Message);
 
             user.Photos.Remove(photo);
 
-            if (await _userRepo.SaveAllAsync()) return Ok();
+            if (await _userRepo.SaveAllAsync())
+                return Ok();
         }
 
         return BadRequest("Failed to delete the photo");
