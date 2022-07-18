@@ -3,8 +3,12 @@
 public class UserParams
 {
     private const int MaxPageSize = 50;
-    public int PageNumber { get; set; } = 1;
     private int _pageSize = 10;
+    public int PageNumber { get; set; } = 1;
+    public string CurrentUserName { get; set; }
+    public string Gender { get; set; }
+    public int MinAge { get; set; } = 18;
+    public int MaxAge { get; set; } = 150;
     public string OrderBy { get; set; } = "lastActive";
 
     public int PageSize
@@ -13,12 +17,8 @@ public class UserParams
         set
         {
             _pageSize = value > MaxPageSize ? MaxPageSize : value;
-            if (value <= 0) _pageSize = 1;
+            if (value <= 0)
+                _pageSize = 1;
         }
     }
-
-    public string CurrentUserName { get; set; }
-    public string Gender { get; set; }
-    public int MinAge { get; set; } = 18;
-    public int MaxAge { get; set; } = 150; 
 }
