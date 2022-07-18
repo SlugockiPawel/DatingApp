@@ -4,23 +4,30 @@ using DatingApp.Services;
 using DatingApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.Extensions
+namespace DatingApp.Extensions;
+
+public static class ApplicationServiceExtensions
 {
-    public static class ApplicationServiceExtensions
+    public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
     {
-        public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
-        {
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"),
-                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        builder.Services.AddDbContext<ApplicationDbContext>(
+            options =>
+                options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("Postgres"),
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                )
+        );
 
-            builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddScoped<IUserService, UserServicePostgres>();
-            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
-            builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        builder.Services.AddScoped<LogUserActivity>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IUserService, UserServicePostgres>();
+        builder.Services.Configure<CloudinarySettings>(
+            builder.Configuration.GetSection("CloudinarySettings")
+        );
 
-            return builder;
-        }
+        builder.Services.AddScoped<IPhotoService, PhotoService>();
+
+        return builder;
     }
 }
