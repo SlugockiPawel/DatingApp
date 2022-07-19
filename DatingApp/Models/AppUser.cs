@@ -20,3 +20,9 @@ public class AppUser
     // Navigation property 1 User => many Photos
     public virtual ICollection<Photo> Photos { get; set; }
 
+    // users that likes currently logged in user
+    public virtual ICollection<AppUserLike> LikedByUsers { get; set; }
+
+    // users that are liked by currently logged in user
+    public virtual ICollection<AppUserLike> LikedUsers { get; set; }
+}
