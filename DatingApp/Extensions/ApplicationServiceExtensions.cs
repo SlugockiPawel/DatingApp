@@ -25,7 +25,7 @@ public static class ApplicationServiceExtensions
         builder.Services.Configure<CloudinarySettings>(
             builder.Configuration.GetSection("CloudinarySettings")
         );
-
+        builder.Services.AddScoped<ILikeService, LikeService>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
 
         return builder;
