@@ -47,8 +47,15 @@ export class MembersService {
   }
 
   getMember(username: string): Observable<Member> {
-    const member: Member = this.members.find((m) => m.name === username);
-    if (member !== undefined) return of(member);
+    // get member out of memberCache
+    const member = [...this.memberCache.values()]
+      .reduce((arr, el) => arr.concat(el.result), [])
+      .find((member: Member) => member.name === username);
+
+    if (member) {
+      return of(member);
+    }
+
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
