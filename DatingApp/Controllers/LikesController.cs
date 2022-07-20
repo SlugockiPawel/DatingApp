@@ -1,5 +1,6 @@
 ﻿using DatingApp.DTOs;
 using DatingApp.Extensions;
+using DatingApp.Helpers;
 using DatingApp.Models;
 using DatingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -48,9 +49,20 @@ public class LikesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LikeDto>>> GetUserLikes(string predicate)
+    public async Task<ActionResult<IEnumerable<LikeDto>>> GetUserLikes(
+        [FromQuery] LikesParams likesParams
+    )
     {
-        var users = await _likeService.GetUserLikes(predicate, User.GetUserId());
+        likesParams.UserId = User.GetUserId();
+        var users = await _likeService.GetUserLikes(likesParams);
+
+        Response.AddPaginationHeader(
+            users.CurrentPage,
+            users.PageSize,
+            users.TotalCount,
+            users.TotalPages
+        );
+
         return Ok(users);
     }
 }
