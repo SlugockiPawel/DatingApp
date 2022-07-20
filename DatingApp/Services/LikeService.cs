@@ -28,7 +28,7 @@ public class LikeService : ILikeService
             .FirstOrDefaultAsync(u => u.Id.Equals(userId));
     }
 
-    public async Task<IEnumerable<LikeDto>> GetUserLikes(string predicate, int userId)
+    public async Task<IEnumerable<LikeDto>> GetUserLikes(string predicate, Guid userId)
     {
         var users = _context.Users.OrderBy(u => u.Name).AsQueryable();
 
