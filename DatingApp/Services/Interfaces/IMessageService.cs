@@ -6,7 +6,7 @@ namespace DatingApp.Services.Interfaces;
 
 public interface IMessageService
 {
-    Task AddMessage(Message message);
+    Task AddMessageAsync(Message message);
     void DeleteMessage(Message message);
     Task<Message> GetMessage(int id);
     Task<PagedList<MessageDto>> GetMessagesForUser();

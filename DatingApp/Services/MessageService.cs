@@ -15,7 +15,7 @@ public class MessageService : IMessageService
         _context = context;
     }
 
-    public async Task AddMessage(Message message)
+    public async Task AddMessageAsync(Message message)
     {
         await _context.Messages.AddAsync(message);
     }
