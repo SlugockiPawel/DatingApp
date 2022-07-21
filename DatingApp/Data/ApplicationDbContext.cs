@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<AppUser> Users { get; set; }
     public DbSet<AppUserLike> Likes { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
