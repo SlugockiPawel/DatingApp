@@ -25,4 +25,7 @@ public class AppUser
 
     // users that are liked by currently logged in user
     public virtual ICollection<AppUserLike> LikedUsers { get; set; }
+
+    public ICollection<Message> MessagesSent { get; set; }
+    public ICollection<Message> MessagesRecieved { get; set; }
 }

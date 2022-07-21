@@ -31,5 +31,17 @@ public class ApplicationDbContext : DbContext
             .WithMany(l => l.LikedByUsers)
             .HasForeignKey(l => l.LikedUserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder
+            .Entity<Message>()
+            .HasOne(u => u.Sender)
+            .WithMany(m => m.MessagesSent)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder
+            .Entity<Message>()
+            .HasOne(u => u.Recipient)
+            .WithMany(m => m.MessagesRecieved)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
