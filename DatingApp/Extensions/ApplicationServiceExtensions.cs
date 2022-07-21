@@ -27,6 +27,7 @@ public static class ApplicationServiceExtensions
         );
         builder.Services.AddScoped<ILikeService, LikeService>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddScoped<IMessageService, MessageService>();
 
         return builder;
     }
