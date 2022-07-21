@@ -21,3 +21,16 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="pagination" class="d-flex justify-content-center">
+  <pagination (pageChanged)="pageChanged($event)"
+              [(ngModel)]="pagination.currentPage"
+              [boundaryLinks]="true"
+              [itemsPerPage]="pagination.itemsPerPage"
+              [totalItems]="pagination.totalItems"
+              firstText="&laquo;"
+              lastText="&raquo;"
+              nextText="&rsaquo;"
+              previousText="&lsaquo;">
+  </pagination>
+</div>
