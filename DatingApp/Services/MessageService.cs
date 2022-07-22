@@ -1,4 +1,6 @@
-﻿using DatingApp.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using DatingApp.Data;
 using DatingApp.DTOs;
 using DatingApp.Helpers;
 using DatingApp.Models;
@@ -9,10 +11,12 @@ namespace DatingApp.Services;
 public class MessageService : IMessageService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public MessageService(ApplicationDbContext context)
+    public MessageService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task AddMessageAsync(Message message)
@@ -30,9 +34,24 @@ public class MessageService : IMessageService
         return await _context.Messages.FindAsync(id);
     }
 
-    public Task<PagedList<MessageDto>> GetMessagesForUser()
+    public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams)
     {
-        throw new NotImplementedException();
+        var query = _context.Messages.OrderByDescending(m => m.DateSent).AsQueryable();
+
+        query = messageParams.Container switch
+        {
+            "Inbox" => query.Where(m => m.RecipientName == messageParams.Username),
+            "Outbox" => query.Where(m => m.SenderName == messageParams.Username),
+            _ => query.Where(m => m.RecipientName == messageParams.Username && m.DateRead == null)
+        };
+
+        var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
+
+        return await PagedList<MessageDto>.CreateAsync(
+            messages,
+            messageParams.PageNumber,
+            messageParams.PageSize
+        );
     }
 
     public Task<IEnumerable<MessageDto>> GetMessageThread(Guid currentUserId, Guid recipientId)
