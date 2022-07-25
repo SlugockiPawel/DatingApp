@@ -1,16 +1,17 @@
-import { MemberEditComponent } from './components/members/member-edit/member-edit.component';
-import { ServerErrorComponent } from './errors/server-error/server-error.component';
-import { NotFoundComponent } from './errors/not-found/not-found.component';
-import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
-import { AuthGuard } from './_guards/auth.guard';
-import { MessagesComponent } from './components/messages/messages.component';
-import { ListsComponent } from './components/lists/lists.component';
-import { MemberDetailComponent } from './components/members/member-detail/member-detail.component';
-import { MemberListComponent } from './components/members/member-list/member-list.component';
-import { HomeComponent } from './components/home/home.component';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import {PreventUnsavedChangesGuard} from "./_guards/prevent-unsaved-changes.guard";
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from './_guards/auth.guard';
+import {PreventUnsavedChangesGuard} from './_guards/prevent-unsaved-changes.guard';
+import {MemberDetailedResolver} from './_resolvers/member-detailed.resolver';
+import {HomeComponent} from './components/home/home.component';
+import {ListsComponent} from './components/lists/lists.component';
+import {MemberDetailComponent} from './components/members/member-detail/member-detail.component';
+import {MemberEditComponent} from './components/members/member-edit/member-edit.component';
+import {MemberListComponent} from './components/members/member-list/member-list.component';
+import {MessagesComponent} from './components/messages/messages.component';
+import {NotFoundComponent} from './errors/not-found/not-found.component';
+import {ServerErrorComponent} from './errors/server-error/server-error.component';
+import {TestErrorsComponent} from './errors/test-errors/test-errors.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -43,6 +44,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
