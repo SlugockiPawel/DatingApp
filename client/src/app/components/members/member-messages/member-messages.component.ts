@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Message} from '../../../_models/message';
-import {MessageService} from '../../../_services/message.service';
 
 @Component({
   selector: 'app-member-messages',
@@ -9,20 +8,11 @@ import {MessageService} from '../../../_services/message.service';
 })
 export class MemberMessagesComponent implements OnInit {
   @Input() username: string;
-  messages: Message[];
+  @Input() messages: Message[];
 
-  constructor(private readonly messageService: MessageService) {
+  constructor() {
   }
 
   ngOnInit(): void {
-    this.loadMessages();
-  }
-
-  loadMessages() {
-    this.messageService
-      .getMessageThread(this.username)
-      .subscribe((messages) => {
-        this.messages = messages;
-      });
   }
 }

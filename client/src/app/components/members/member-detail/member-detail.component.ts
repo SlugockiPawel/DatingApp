@@ -58,4 +58,12 @@ export class MemberDetailComponent implements OnInit {
       });
   }
 
+  loadMessages() {
+    this.messageService
+      .getMessageThread(this.member.name)
+      .subscribe((messages) => {
+        this.messages = messages;
+      });
+  }
+
 }
