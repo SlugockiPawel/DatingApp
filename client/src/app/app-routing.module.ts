@@ -21,11 +21,19 @@ const routes: Routes = [
     children: [
       {path: 'members', component: MemberListComponent},
       // {path: 'members/:id', component: MemberDetailComponent},
-      {path: 'members/:name', component: MemberDetailComponent},
-      {path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard]},
+      {
+        path: 'members/:name',
+        component: MemberDetailComponent,
+        resolve: {member: MemberDetailedResolver},
+      },
+      {
+        path: 'member/edit',
+        component: MemberEditComponent,
+        canDeactivate: [PreventUnsavedChangesGuard],
+      },
       {path: 'lists', component: ListsComponent},
       {path: 'messages', component: MessagesComponent},
-    ]
+    ],
   },
   {path: 'errors', component: TestErrorsComponent},
   {path: 'not-found', component: NotFoundComponent},
