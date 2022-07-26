@@ -41,9 +41,21 @@ public class MessageService : IMessageService
 
         query = messageParams.Container switch
         {
-            "Inbox" => query.Where(m => m.RecipientName == messageParams.Username),
-            "Outbox" => query.Where(m => m.SenderName == messageParams.Username),
-            _ => query.Where(m => m.RecipientName == messageParams.Username && m.DateRead == null)
+            "Inbox"
+                => query.Where(
+                    m => m.RecipientName == messageParams.Username && m.RecipientDeleted == false
+                ),
+            "Outbox"
+                => query.Where(
+                    m => m.SenderName == messageParams.Username && m.SenderDeleted == false
+                ),
+            _
+                => query.Where(
+                    m =>
+                        m.RecipientName == messageParams.Username
+                        && m.DateRead == null
+                        && m.RecipientDeleted == false
+                )
         };
 
         var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
@@ -67,8 +79,16 @@ public class MessageService : IMessageService
             .ThenInclude(u => u.Photos)
             .Where(
                 m =>
-                    (m.RecipientName == currentUsername && m.SenderName == recipientUsername)
-                    || (m.RecipientName == recipientUsername && m.SenderName == currentUsername)
+                    (
+                        m.RecipientName == currentUsername
+                        && m.RecipientDeleted == false
+                        && m.SenderName == recipientUsername
+                    )
+                    || (
+                        m.RecipientName == recipientUsername
+                        && m.SenderName == currentUsername
+                        && m.SenderDeleted == false
+                    )
             )
             .OrderBy(m => m.DateSent)
             .ToListAsync();
