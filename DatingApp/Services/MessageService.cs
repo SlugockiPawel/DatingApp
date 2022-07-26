@@ -30,7 +30,7 @@ public class MessageService : IMessageService
         _context.Remove(message);
     }
 
-    public async Task<Message> GetMessage(int id)
+    public async Task<Message> GetMessageAsync(int id)
     {
         return await _context.Messages.FindAsync(id);
     }
