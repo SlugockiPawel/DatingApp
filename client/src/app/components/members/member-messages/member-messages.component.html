@@ -35,11 +35,17 @@
   </div>
 
   <div class="card-footer">
-    <form action="">
+    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
       <div class="input-group">
-        <input class="form-control input-sm" placeholder="Send a private message" type="text">
+        <input
+          [(ngModel)]="messageContent"
+          class="form-control input-sm"
+          name="messageContent"
+          placeholder="Send a private message"
+          required
+          type="text">
         <div class="input-group-append">
-          <button class="btn btn-primary btn-sm" type="submit">Send</button>
+          <button [disabled]="!messageForm.valid" class="btn btn-primary btn-sm" type="submit">Send</button>
         </div>
       </div>
     </form>
