@@ -64,7 +64,8 @@ public class AccountController : BaseApiController
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-        if (!result.Succeeded) return Unauthorized();
+        if (!result.Succeeded)
+            return Unauthorized();
 
         return new UserDto
         {

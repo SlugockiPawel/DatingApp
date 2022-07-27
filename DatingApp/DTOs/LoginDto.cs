@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DatingApp.DTOs
-{
-    public class LoginDto
-    {
-        [Required]
-        public string UserName { get; set; }
+namespace DatingApp.DTOs;
 
-        [Required]
-        public string Password { get; set; }
-    }
+public class LoginDto
+{
+    [Required] public string UserName { get; set; }
+
+    [Required] public string Password { get; set; }
 }
