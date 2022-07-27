@@ -43,16 +43,16 @@ public class MessageService : IMessageService
         {
             "Inbox"
                 => query.Where(
-                    m => m.RecipientName == messageParams.Username && m.RecipientDeleted == false
+                    m => m.RecipientName == messageParams.UserName && m.RecipientDeleted == false
                 ),
             "Outbox"
                 => query.Where(
-                    m => m.SenderName == messageParams.Username && m.SenderDeleted == false
+                    m => m.SenderName == messageParams.UserName && m.SenderDeleted == false
                 ),
             _
                 => query.Where(
                     m =>
-                        m.RecipientName == messageParams.Username
+                        m.RecipientName == messageParams.UserName
                         && m.DateRead == null
                         && m.RecipientDeleted == false
                 )

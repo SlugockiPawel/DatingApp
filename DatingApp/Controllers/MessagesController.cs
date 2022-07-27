@@ -63,7 +63,7 @@ public class MessagesController : BaseApiController
         [FromQuery] MessageParams messageParams
     )
     {
-        messageParams.Username = User.GetUserName();
+        messageParams.UserName = User.GetUserName();
 
         var messages = await _messageService.GetMessagesForUser(messageParams);
 
