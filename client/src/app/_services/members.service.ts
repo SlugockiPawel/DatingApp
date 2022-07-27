@@ -1,12 +1,12 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {map, Observable, of, take} from 'rxjs';
-import {environment} from '../../environments/environment';
-import {Member} from '../_models/member';
-import {User} from '../_models/user';
-import {UserParams} from '../_models/userParams';
-import {AccountService} from './account.service';
-import {getPaginatedResult, getPaginationHeaders} from './paginationHelper';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map, Observable, of, take } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Member } from '../_models/member';
+import { User } from '../_models/user';
+import { UserParams } from '../_models/userParams';
+import { AccountService } from './account.service';
+import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 @Injectable({
   providedIn: 'root',
@@ -78,7 +78,7 @@ export class MembersService {
     // get member out of memberCache
     const member = [...this.memberCache.values()]
       .reduce((arr, el) => arr.concat(el.result), [])
-      .find((member: Member) => member.name === username);
+      .find((member: Member) => member.username === username);
 
     if (member) {
       return of(member);
