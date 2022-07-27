@@ -1,15 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {
-  NgxGalleryAnimation,
-  NgxGalleryImage,
-  NgxGalleryOptions,
-} from '@kolkov/ngx-gallery';
-import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
-import { Message } from '../../../_models/message';
-import { MessageService } from '../../../_services/message.service';
-import { Member } from './../../../_models/member';
-import { MembersService } from './../../../_services/members.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions,} from '@kolkov/ngx-gallery';
+import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
+import {Message} from '../../../_models/message';
+import {MessageService} from '../../../_services/message.service';
+import {Member} from './../../../_models/member';
+import {MembersService} from './../../../_services/members.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -17,7 +13,7 @@ import { MembersService } from './../../../_services/members.service';
   styleUrls: ['./member-detail.component.css'],
 })
 export class MemberDetailComponent implements OnInit {
-  @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
+  @ViewChild('memberTabs', {static: true}) memberTabs: TabsetComponent;
   activeTab: TabDirective;
   member: Member;
   galleryOptions: NgxGalleryOptions[];
@@ -28,7 +24,8 @@ export class MemberDetailComponent implements OnInit {
     private memberService: MembersService,
     private route: ActivatedRoute,
     private messageService: MessageService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe((data) => {
@@ -68,7 +65,7 @@ export class MemberDetailComponent implements OnInit {
 
   loadMessages() {
     this.messageService
-      .getMessageThread(this.member.username)
+      .getMessageThread(this.member.userName)
       .subscribe((messages) => {
         this.messages = messages;
       });

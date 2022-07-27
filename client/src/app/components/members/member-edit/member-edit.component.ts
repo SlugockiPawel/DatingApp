@@ -1,11 +1,11 @@
-import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
-import { MembersService } from './../../../_services/members.service';
-import { AccountService } from './../../../_services/account.service';
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { Member } from 'src/app/_models/member';
-import { User } from 'src/app/_models/user';
-import { NgForm } from '@angular/forms';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {ToastrService} from 'ngx-toastr';
+import {take} from 'rxjs';
+import {Member} from 'src/app/_models/member';
+import {User} from 'src/app/_models/user';
+import {AccountService} from './../../../_services/account.service';
+import {MembersService} from './../../../_services/members.service';
 
 @Component({
   selector: 'app-member-edit',
@@ -17,14 +17,6 @@ export class MemberEditComponent implements OnInit {
   member: Member;
   user: User;
 
-  @HostListener('window:beforeunload', ['$event']) unloadNotification(
-    $event: any
-  ) {
-    if (this.editForm.dirty) {
-      $event.returnValue = true;
-    }
-  }
-
   constructor(
     private accountService: AccountService,
     private memberService: MembersService,
@@ -35,12 +27,20 @@ export class MemberEditComponent implements OnInit {
       .subscribe((user) => (this.user = user));
   }
 
+  @HostListener('window:beforeunload', ['$event']) unloadNotification(
+    $event: any
+  ) {
+    if (this.editForm.dirty) {
+      $event.returnValue = true;
+    }
+  }
+
   ngOnInit(): void {
     this.loadMember();
   }
 
   loadMember() {
-    this.memberService.getMember(this.user.username).subscribe({
+    this.memberService.getMember(this.user.userName).subscribe({
       next: (member) => (this.member = member),
     });
   }

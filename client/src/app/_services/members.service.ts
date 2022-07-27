@@ -1,12 +1,12 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { map, Observable, of, take } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { Member } from '../_models/member';
-import { User } from '../_models/user';
-import { UserParams } from '../_models/userParams';
-import { AccountService } from './account.service';
-import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {map, Observable, of, take} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {Member} from '../_models/member';
+import {User} from '../_models/user';
+import {UserParams} from '../_models/userParams';
+import {AccountService} from './account.service';
+import {getPaginatedResult, getPaginationHeaders} from './paginationHelper';
 
 @Injectable({
   providedIn: 'root',
@@ -74,17 +74,17 @@ export class MembersService {
     );
   }
 
-  getMember(username: string): Observable<Member> {
+  getMember(userName: string): Observable<Member> {
     // get member out of memberCache
     const member = [...this.memberCache.values()]
       .reduce((arr, el) => arr.concat(el.result), [])
-      .find((member: Member) => member.username === username);
+      .find((member: Member) => member.userName === userName);
 
     if (member) {
       return of(member);
     }
 
-    return this.http.get<Member>(this.baseUrl + 'users/' + username);
+    return this.http.get<Member>(this.baseUrl + 'users/' + userName);
   }
 
   updateMember(member: Member) {
@@ -104,8 +104,8 @@ export class MembersService {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 
-  addLike(username: string) {
-    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  addLike(userName: string) {
+    return this.http.post(this.baseUrl + 'likes/' + userName, {});
   }
 
   getLikes(predicate: string, pageNumber: number, pageSize: number) {

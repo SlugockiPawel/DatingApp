@@ -14,6 +14,6 @@ export class MemberDetailedResolver implements Resolve<Member> {
   // resolvers allow to get data before a component template is constructed
 
   resolve(route: ActivatedRouteSnapshot): Observable<Member> {
-    return this.memberService.getMember(route.paramMap.get('name'));
+    return this.memberService.getMember(route.paramMap.get('userName'));
   }
 }

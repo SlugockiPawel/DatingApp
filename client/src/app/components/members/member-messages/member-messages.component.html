@@ -16,11 +16,11 @@
             <div class="header">
               <small class="text-muted">
                 <span class="fa fa-clock-o"> {{message.dateSent | timeago}}</span>
-                <span *ngIf="!message.dateRead && message.senderName !== username"
+                <span *ngIf="!message.dateRead && message.senderName !== userName"
                       class="text-danger">
                   (unread)
                 </span>
-                <span *ngIf="message.dateRead && message.senderName !== username"
+                <span *ngIf="message.dateRead && message.senderName !== userName"
                       class="text-success">
                   (read {{message.dateRead | timeago}})
                 </span>

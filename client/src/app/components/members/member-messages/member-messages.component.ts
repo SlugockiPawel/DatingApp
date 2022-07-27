@@ -11,7 +11,7 @@ import {MessageService} from '../../../_services/message.service';
 export class MemberMessagesComponent implements OnInit {
   @ViewChild('messageForm') messageForm: NgForm;
   @Input()
-  username: string;
+  userName: string;
   @Input() messages: Message[];
   messageContent: string;
 
@@ -23,7 +23,7 @@ export class MemberMessagesComponent implements OnInit {
 
   sendMessage() {
     this.messageService
-      .sendMessage(this.username, this.messageContent)
+      .sendMessage(this.userName, this.messageContent)
       .subscribe({
         next: (message: Message) => {
           this.messages.push(message);
