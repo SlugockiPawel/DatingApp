@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DatingApp.Data;
 using DatingApp.DTOs;
@@ -45,25 +43,21 @@ public class UserServicePostgres : IUserService
     {
         return await _context.Users
             .Include(u => u.Photos)
-            .SingleOrDefaultAsync(u => u.Name.Equals(name));
+            .SingleOrDefaultAsync(u => u.UserName.Equals(name));
     }
 
     public async Task<UserDto> RegisterUserAsync(RegisterDto registerDto)
     {
         var user = _mapper.Map<AppUser>(registerDto);
 
-        using var hmac = new HMACSHA512();
-
-        user.Name = registerDto.Name.ToLower();
-        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
-        user.PasswordSalt = hmac.Key;
+        user.UserName = registerDto.UserName.ToLower();
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
         return new UserDto
         {
-            Name = user.Name,
+            UserName = user.UserName,
             Token = _tokenService.CreateToken(user),
             KnownAs = user.KnownAs,
             Gender = user.Gender
@@ -82,7 +76,7 @@ public class UserServicePostgres : IUserService
 
     public async Task<bool> UserExistAsync(string username)
     {
-        return await _context.Users.AnyAsync(u => u.Name.Equals(username.ToLower()));
+        return await _context.Users.AnyAsync(u => u.UserName.Equals(username.ToLower()));
     }
 
     public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
@@ -92,7 +86,7 @@ public class UserServicePostgres : IUserService
 
         var query = _context.Users
             .AsQueryable()
-            .Where(u => u.Gender == userParams.Gender && u.Name != userParams.CurrentUserName)
+            .Where(u => u.Gender == userParams.Gender && u.UserName != userParams.CurrentUserName)
             .Where(u => u.DateOfBirth >= minDateOfBirth && u.DateOfBirth <= maxDateOfBirth)
             .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
             .AsNoTracking();
@@ -115,6 +109,6 @@ public class UserServicePostgres : IUserService
         // do not need to .Include(u=> u.Photo), mapper and EF will perform left join
         return await _context.Users
             .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-            .SingleOrDefaultAsync(u => u.Name.Equals(name));
+            .SingleOrDefaultAsync(u => u.UserName.Equals(name));
     }
 }

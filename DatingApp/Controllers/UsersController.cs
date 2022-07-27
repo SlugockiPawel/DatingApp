@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
-using DatingApp.Data;
+﻿using AutoMapper;
 using DatingApp.DTOs;
 using DatingApp.Extensions;
 using DatingApp.Helpers;
@@ -16,9 +14,9 @@ namespace DatingApp.Controllers;
 [Authorize]
 public class UsersController : BaseApiController
 {
-    private readonly IUserService _userRepo;
     private readonly IMapper _mapper;
     private readonly IPhotoService _photoService;
+    private readonly IUserService _userRepo;
 
     public UsersController(IUserService userRepo, IMapper mapper, IPhotoService photoService)
     {
@@ -34,12 +32,9 @@ public class UsersController : BaseApiController
     )
     {
         var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
-        userParams.CurrentUserName = user.Name;
+        userParams.CurrentUserName = user.UserName;
 
-        if (string.IsNullOrWhiteSpace(userParams.Gender))
-        {
-            userParams.Gender = user.Gender == "male" ? "female" : "male";
-        }
+        if (string.IsNullOrWhiteSpace(userParams.Gender)) userParams.Gender = user.Gender == "male" ? "female" : "male";
 
         var users = await _userRepo.GetMembersAsync(userParams);
 
@@ -96,24 +91,19 @@ public class UsersController : BaseApiController
         if (result.Error is not null)
             return BadRequest(result.Error.Message);
 
-        var photo = new Photo() { Url = result.SecureUrl.AbsoluteUri, PublicId = result.PublicId, };
+        var photo = new Photo { Url = result.SecureUrl.AbsoluteUri, PublicId = result.PublicId };
 
-        if (user.Photos.Count == 0)
-        {
-            photo.IsMain = true;
-        }
+        if (user.Photos.Count == 0) photo.IsMain = true;
 
         user.Photos.Add(photo);
 
         if (await _userRepo.SaveAllAsync())
-        {
             return CreatedAtRoute(
                 nameof(GetUserByName),
-                new { name = user.Name },
+                new { name = user.UserName },
                 _mapper.Map<PhotoDto>(photo)
             );
-            // return _mapper.Map<PhotoDto>(photo);
-        }
+        // return _mapper.Map<PhotoDto>(photo);
 
         return BadRequest("Problem adding photo");
     }
@@ -124,10 +114,7 @@ public class UsersController : BaseApiController
         var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
         var photo = user.Photos.FirstOrDefault(p => p.Id.Equals(photoId));
 
-        if (photo is null)
-        {
-            return NotFound();
-        }
+        if (photo is null) return NotFound();
 
         if (photo.IsMain)
             return BadRequest("This Photo is already a main photo");

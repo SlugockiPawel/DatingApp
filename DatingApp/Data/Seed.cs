@@ -1,57 +1,51 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using DatingApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.Data
+namespace DatingApp.Data;
+
+public static class Seed
 {
-    public static class Seed
+    public static async Task ManageDataAsync(IHost host)
     {
-        public static async Task ManageDataAsync(IHost host)
+        using var svcScope = host.Services.CreateScope();
+        var svcProvider = svcScope.ServiceProvider;
+
+        try
         {
-            using IServiceScope svcScope = host.Services.CreateScope();
-            IServiceProvider svcProvider = svcScope.ServiceProvider;
+            var userManagerSvc = svcProvider.GetRequiredService<UserManager<AppUser>>();
+            var dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
+            //Migration: This is the programmatic equivalent to Update-Database
+            await dbContextSvc.Database.MigrateAsync();
 
-            try
-            {
-                //Service: An instance of RoleManager
-                ApplicationDbContext dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
-                //Migration: This is the programmatic equivalent to Update-Database
-                await dbContextSvc.Database.MigrateAsync();
-
-                await SeedUsersAsync(dbContextSvc);
-            }
-            catch (Exception ex)
-            {
-                var logger = svcProvider.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred during migration/seeding data");
-
-                Console.WriteLine($"{ex}: {ex.Message}");
-                throw;
-            }
+            await SeedUsersAsync(userManagerSvc);
         }
-
-
-        private static async Task SeedUsersAsync(ApplicationDbContext context)
+        catch (Exception ex)
         {
-            if (await context.Users.AnyAsync()) return;
+            var logger = svcProvider.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred during migration/seeding data");
 
-            var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
-            var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
+            Console.WriteLine($"{ex}: {ex.Message}");
+            throw;
+        }
+    }
 
-            foreach (var user in users)
-            {
-                using var hmac = new HMACSHA512();
+    private static async Task SeedUsersAsync(UserManager<AppUser> userManager)
+    {
+        if (await userManager.Users.AnyAsync())
+            return;
 
-                user.Name = user.Name.ToLower();
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$word"));
-                user.PasswordSalt = hmac.Key;
+        var userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
+        var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
 
-                await context.Users.AddAsync(user);
-            }
+        if (users is null)
+            return;
 
-            await context.SaveChangesAsync();
+        foreach (var user in users)
+        {
+            user.UserName = user.UserName.ToLower();
+            await userManager.CreateAsync(user, "Pa$$word");
         }
     }
 }

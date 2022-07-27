@@ -1,13 +1,7 @@
-using System.Text;
 using DatingApp.Data;
 using DatingApp.Extensions;
 using DatingApp.Helpers;
 using DatingApp.Middleware;
-using DatingApp.Services;
-using DatingApp.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddApplicationServices(); // custom extension method ApplicationServiceExtensions to clean up Program.cs
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 builder.Services.AddCors();
 
@@ -31,6 +25,7 @@ var app = builder.Build();
 
 // Seed Data
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // enable legacy DateTime behavior
+
 await Seed.ManageDataAsync(app);
 
 // Configure the HTTP request pipeline.
@@ -43,14 +38,16 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
-
 // app.UseRouting();
 
-// UseCors should be used before UseAuthentication(); and UseAuthorization();    
+// UseCors should be used before UseAuthentication(); and UseAuthorization();
 // AND after UseHttpsRedirection(); further details => https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-6.0#middleware-order
 app.UseCors(policy =>
 {
-    policy.WithOrigins("https://localhost:4200", "http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+    policy
+        .WithOrigins("https://localhost:4200", "http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
 });
 
 app.UseAuthentication();

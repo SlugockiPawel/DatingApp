@@ -31,7 +31,7 @@ public class LikeService : ILikeService
 
     public async Task<PagedList<LikeDto>> GetUserLikes(LikesParams likesParams)
     {
-        var users = _context.Users.OrderBy(u => u.Name).AsQueryable();
+        var users = _context.Users.OrderBy(u => u.UserName).AsQueryable();
 
         var likes = _context.Likes.AsQueryable();
 
@@ -52,7 +52,7 @@ public class LikeService : ILikeService
                 new LikeDto
                 {
                     UserId = u.Id,
-                    name = u.Name,
+                    UserName = u.UserName,
                     KnownAs = u.KnownAs,
                     Age = u.DateOfBirth.CalculateAge(),
                     PhotoUrl = u.Photos.FirstOrDefault(p => p.IsMain).Url,

@@ -1,11 +1,9 @@
-﻿namespace DatingApp.Models;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class AppUser
+namespace DatingApp.Models;
+
+public class AppUser : IdentityUser<Guid>
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public byte[] PasswordHash { get; set; }
-    public byte[] PasswordSalt { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string KnownAs { get; set; }
     public DateTime Created { get; set; } = DateTime.UtcNow;
@@ -28,4 +26,5 @@ public class AppUser
 
     public ICollection<Message> MessagesSent { get; set; }
     public ICollection<Message> MessagesRecieved { get; set; }
+    public ICollection<AppUserRole> UserRoles { get; set; }
 }
