@@ -12,7 +12,11 @@ public static class IdentityServiceExtensions
     public static WebApplicationBuilder AddIdentityServices(this WebApplicationBuilder builder)
     {
         builder.Services
-            .AddIdentityCore<AppUser>(opt => { opt.Password.RequireNonAlphanumeric = false; })
+            .AddIdentityCore<AppUser>(opt =>
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireDigit = false;
+            })
             .AddRoles<AppRole>()
             .AddRoleManager<RoleManager<AppRole>>()
             .AddSignInManager<SignInManager<AppUser>>()
