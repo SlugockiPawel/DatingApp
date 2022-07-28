@@ -58,7 +58,7 @@ public class UserServicePostgres : IUserService
         return new UserDto
         {
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
+            Token = await _tokenService.CreateTokenAsync(user),
             KnownAs = user.KnownAs,
             Gender = user.Gender
         };

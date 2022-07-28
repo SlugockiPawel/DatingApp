@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet.Actions;
 using DatingApp.DTOs;
+using DatingApp.Enums;
 using DatingApp.Models;
 using DatingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -43,10 +45,15 @@ public class AccountController : BaseApiController
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
+        var roleResult = await _userManager.AddToRoleAsync(user, nameof(Roles.Member));
+        
+        if (!roleResult.Succeeded)
+            return BadRequest(roleResult.Errors);
+
         return new UserDto
         {
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
+            Token = await _tokenService.CreateTokenAsync(user),
             KnownAs = user.KnownAs,
             Gender = user.Gender
         };
@@ -70,7 +77,7 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
+            Token = await _tokenService.CreateTokenAsync(user),
             MainPhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url,
             KnownAs = user.KnownAs,
             Gender = user.Gender
