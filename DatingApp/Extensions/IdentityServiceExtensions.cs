@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using DatingApp.Data;
+using DatingApp.Enums;
 using DatingApp.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +38,13 @@ public static class IdentityServiceExtensions
                     ValidateAudience = false
                 };
             });
+
+        builder.Services.AddAuthorization(opt =>
+        {
+            opt.AddPolicy(nameof(AuthPolicies.RequireAdminRole), policy => policy.RequireRole(nameof(Roles.Admin)));
+            opt.AddPolicy(nameof(AuthPolicies.ModeratePhotoRole),
+                policy => policy.RequireRole(nameof(Roles.Admin), nameof(Roles.Moderator)));
+        });
 
         return builder;
     }
