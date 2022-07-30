@@ -28,6 +28,7 @@ import { TextInputComponent } from './components/forms/text-input/text-input.com
 import { FormControlPipe } from './_pipes/form-control.pipe';
 import { DateInputComponent } from './components/forms/date-input/date-input.component';
 import { MemberMessagesComponent } from './components/members/member-messages/member-messages.component';
+import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { MemberMessagesComponent } from './components/members/member-messages/me
     TextInputComponent,
     FormControlPipe,
     DateInputComponent,
-    MemberMessagesComponent
+    MemberMessagesComponent,
+    AdminPanelComponent
   ],
   imports: [
     BrowserModule,
