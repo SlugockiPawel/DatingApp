@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {AdminGuard} from './_guards/admin.guard';
 import {AuthGuard} from './_guards/auth.guard';
 import {PreventUnsavedChangesGuard} from './_guards/prevent-unsaved-changes.guard';
 import {MemberDetailedResolver} from './_resolvers/member-detailed.resolver';
@@ -35,7 +36,11 @@ const routes: Routes = [
       },
       {path: 'lists', component: ListsComponent},
       {path: 'messages', component: MessagesComponent},
-      {path: 'admin', component: AdminPanelComponent},
+      {
+        path: 'admin',
+        component: AdminPanelComponent,
+        canActivate: [AdminGuard],
+      },
     ],
   },
   {path: 'errors', component: TestErrorsComponent},
