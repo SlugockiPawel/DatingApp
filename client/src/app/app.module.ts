@@ -52,7 +52,9 @@ import { HasRoleDirective } from './_directives/has-role.directive';
     DateInputComponent,
     MemberMessagesComponent,
     AdminPanelComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    UserManagementComponent,
+    PhotoManagementComponent
   ],
   imports: [
     BrowserModule,
