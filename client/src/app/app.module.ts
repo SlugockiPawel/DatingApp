@@ -29,6 +29,7 @@ import { FormControlPipe } from './_pipes/form-control.pipe';
 import { DateInputComponent } from './components/forms/date-input/date-input.component';
 import { MemberMessagesComponent } from './components/members/member-messages/member-messages.component';
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/has-role.directive';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.
     FormControlPipe,
     DateInputComponent,
     MemberMessagesComponent,
-    AdminPanelComponent
+    AdminPanelComponent,
+    HasRoleDirective
   ],
   imports: [
     BrowserModule,
