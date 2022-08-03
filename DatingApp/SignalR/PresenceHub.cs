@@ -1,8 +1,10 @@
 ﻿using DatingApp.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DatingApp.SignalR;
 
+[Authorize]
 public class PresenceHub : Hub
 {
     public override async Task OnConnectedAsync()

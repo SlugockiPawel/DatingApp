@@ -37,13 +37,38 @@ public static class IdentityServiceExtensions
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (
+                            !string.IsNullOrWhiteSpace(accessToken)
+                            && path.StartsWithSegments("/hubs")
+                        )
+                            ;
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         builder.Services.AddAuthorization(opt =>
         {
-            opt.AddPolicy(nameof(AuthPolicies.RequireAdminRole), policy => policy.RequireRole(nameof(Roles.Admin)));
-            opt.AddPolicy(nameof(AuthPolicies.ModeratePhotoRole),
-                policy => policy.RequireRole(nameof(Roles.Admin), nameof(Roles.Moderator)));
+            opt.AddPolicy(
+                nameof(AuthPolicies.RequireAdminRole),
+                policy => policy.RequireRole(nameof(Roles.Admin))
+            );
+            opt.AddPolicy(
+                nameof(AuthPolicies.ModeratePhotoRole),
+                policy => policy.RequireRole(nameof(Roles.Admin), nameof(Roles.Moderator))
+            );
         });
 
         return builder;
