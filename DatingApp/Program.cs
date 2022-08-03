@@ -2,6 +2,7 @@ using DatingApp.Data;
 using DatingApp.Extensions;
 using DatingApp.Helpers;
 using DatingApp.Middleware;
+using DatingApp.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
 builder.AddIdentityServices(); // custom extension method IdentityServiceExtensions to clean up Program.cs
+builder.Services.AddSignalR();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
@@ -54,5 +56,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<PresenceHub>("hubs/presence");
 
 app.Run();
