@@ -2,6 +2,7 @@
 using DatingApp.Helpers;
 using DatingApp.Services;
 using DatingApp.Services.Interfaces;
+using DatingApp.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Extensions;
@@ -18,6 +19,7 @@ public static class ApplicationServiceExtensions
                 )
         );
 
+        builder.Services.AddSingleton<PresenceTracker>();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         builder.Services.AddScoped<LogUserActivity>();
         builder.Services.AddScoped<ITokenService, TokenService>();
