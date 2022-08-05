@@ -9,9 +9,13 @@ public class PresenceTracker
         lock (OnlineUsers)
         {
             if (OnlineUsers.ContainsKey(username))
+            {
                 OnlineUsers[username].Add(connectionId);
+            }
             else
+            {
                 OnlineUsers.Add(username, new List<string> { connectionId });
+            }
         }
 
         return Task.CompletedTask;
@@ -22,11 +26,16 @@ public class PresenceTracker
         lock (OnlineUsers)
         {
             if (!OnlineUsers.ContainsKey(username))
+            {
                 return Task.CompletedTask;
+            }
 
             OnlineUsers[username].Remove(connectionId);
+
             if (OnlineUsers[username].Count == 0)
+            {
                 OnlineUsers.Remove(username);
+            }
         }
 
         return Task.CompletedTask;
