@@ -15,10 +15,10 @@ export class MemberMessagesComponent implements OnInit {
   @Input() messages: Message[];
   messageContent: string;
 
-  constructor(private readonly messageService: MessageService) {
+  constructor(public messageService: MessageService) {
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
 
   sendMessage() {
