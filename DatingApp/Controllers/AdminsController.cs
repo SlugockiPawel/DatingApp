@@ -18,7 +18,7 @@ public class AdminsController : BaseApiController
 
     [Authorize(Policy = $"{nameof(AuthPolicies.RequireAdminRole)}")]
     [HttpGet("users-with-roles")]
-    public async Task<IActionResult> GetUsersWithRoles()
+    public IActionResult GetUsersWithRoles()
     {
         var users = _userManager.Users
             .Include(u => u.UserRoles)
