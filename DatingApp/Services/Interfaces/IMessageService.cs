@@ -6,10 +6,10 @@ namespace DatingApp.Services.Interfaces;
 
 public interface IMessageService
 {
-    void AddGroup(Group group);
+    Task AddGroupAsync(Group group);
     void RemoveConnection(Connection connection);
-    Task<Connection> GetConnection(string connectionId);
-    Task<Group> GetMessageGroup(string groupName);
+    Task<Connection> GetConnectionAsync(string connectionId);
+    Task<Group> GetMessageGroupAsync(string groupName);
 
     Task AddMessageAsync(Message message);
     void DeleteMessage(Message message);

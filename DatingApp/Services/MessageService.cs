@@ -20,6 +20,23 @@ public class MessageService : IMessageService
         _mapper = mapper;
     }
 
+    public void RemoveConnection(Connection connection)
+    {
+        _context.Remove(connection);
+    }
+
+    public async Task<Connection> GetConnectionAsync(string connectionId)
+    {
+        return await _context.Connections.FindAsync(connectionId);
+    }
+
+    public async Task<Group> GetMessageGroupAsync(string groupName)
+    {
+        return await _context.Groups
+            .Include(g => g.Connections)
+            .FirstOrDefaultAsync(g => g.Name == groupName);
+    }
+
     public async Task AddMessageAsync(Message message)
     {
         await _context.Messages.AddAsync(message);
@@ -107,5 +124,10 @@ public class MessageService : IMessageService
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task AddGroupAsync(Group group)
+    {
+        await _context.Groups.AddAsync(group);
     }
 }

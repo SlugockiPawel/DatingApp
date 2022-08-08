@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CloudinaryDotNet.Actions;
 using DatingApp.DTOs;
 using DatingApp.Enums;
 using DatingApp.Models;
@@ -46,7 +45,7 @@ public class AccountController : BaseApiController
             return BadRequest(result.Errors);
 
         var roleResult = await _userManager.AddToRoleAsync(user, nameof(Roles.Member));
-        
+
         if (!roleResult.Succeeded)
             return BadRequest(roleResult.Errors);
 
