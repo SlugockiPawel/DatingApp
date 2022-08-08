@@ -7,17 +7,18 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace DatingApp.SignalR;
 
+// TODO make message hub authorized?
 public class MessageHub : Hub
 {
-    private readonly Mapper _mapper;
+    private readonly IMapper _mapper;
     private readonly IMessageService _messageService;
     private readonly IUserService _userService;
 
-    public MessageHub(IMessageService messageService, Mapper mapper, IUserService userService)
+    public MessageHub(IMessageService messageService, IUserService userService, IMapper mapper)
     {
         _messageService = messageService;
-        _mapper = mapper;
         _userService = userService;
+        _mapper = mapper;
     }
 
     public override async Task OnConnectedAsync()
