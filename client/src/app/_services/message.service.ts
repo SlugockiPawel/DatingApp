@@ -1,11 +1,11 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {HubConnection, HubConnectionBuilder} from '@microsoft/signalr';
-import {BehaviorSubject} from 'rxjs';
-import {environment} from '../../environments/environment';
-import {Message} from '../_models/message';
-import {User} from '../_models/user';
-import {getPaginatedResult, getPaginationHeaders} from './paginationHelper';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { BehaviorSubject, take } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Message } from '../_models/message';
+import { User } from '../_models/user';
+import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +17,7 @@ export class MessageService {
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
 
-  constructor(private readonly http: HttpClient) {
-  }
+  constructor(private readonly http: HttpClient) {}
 
   createHubConnection(user: User, otherUsername: string) {
     this.hubConnection = new HubConnectionBuilder()
@@ -28,19 +27,25 @@ export class MessageService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.start().catch(error => console.log(error));
+    this.hubConnection.start().catch((error) => console.log(error));
 
-    this.hubConnection.on('ReceiveMessageThread', messages =>
+    this.hubConnection.on('ReceiveMessageThread', (messages) =>
       this.messageThreadSource.next(messages)
+    );
+
+    this.hubConnection.on('NewMessage', (message) =>
+      this.messageThread$
+        .pipe(take(1))
+        .subscribe((messages) =>
+          this.messageThreadSource.next([...messages, message])
+        )
     );
   }
 
   stopHubConnection() {
     if (this.hubConnection) {
-      this.hubConnection.stop();
+      this.hubConnection.stop().catch((error) => console.log(error));
     }
-
-    // this.hubConnection.stop();
   }
 
   getMessages(pageNumber: number, pageSize: number, container: string) {
@@ -59,11 +64,10 @@ export class MessageService {
     );
   }
 
-  sendMessage(username: string, content: string) {
-    return this.http.post<Message>(this.baseUrl + 'messages', {
-      recipientName: username,
-      content,
-    });
+  async sendMessage(username: string, content: string) {
+    return this.hubConnection
+      .invoke('SendMessage', { recipientName: username, content })
+      .catch((error) => console.log(error));
   }
 
   deleteMessage(id: number) {
