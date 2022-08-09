@@ -28,6 +28,7 @@ public class MessageHub : Hub
         var otherUser = httpContext.Request.Query["user"].ToString();
         var groupName = GetGroupName(loggedUser, otherUser);
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+        await AddToGroup(groupName);
 
         var messages = await _messageService.GetMessageThread(loggedUser, otherUser);
 
@@ -36,6 +37,7 @@ public class MessageHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
+        await RemoveFromMessageGroup();
         await base.OnDisconnectedAsync(exception);
     }
 
@@ -63,13 +65,44 @@ public class MessageHub : Hub
             Content = createMessageDto.Content
         };
 
+        var groupName = GetGroupName(sender.UserName, recipient.UserName);
+
+        var group = await _messageService.GetMessageGroupAsync(groupName);
+
+        if (group.Connections.Any(c => c.Username == recipient.UserName))
+        {
+            message.DateRead = DateTime.UtcNow;
+        }
+        
         await _messageService.AddMessageAsync(message);
 
         if (await _messageService.SaveAllAsync())
         {
-            var group = GetGroupName(sender.UserName, recipient.UserName);
-            await Clients.Group(group).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
+            await Clients.Group(groupName).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
         }
+    }
+
+    private async Task<bool> AddToGroup(string groupName)
+    {
+        var group = await _messageService.GetMessageGroupAsync(groupName);
+        var connection = new Connection(Context.ConnectionId, Context.User.GetUserName());
+
+        if (group is null)
+        {
+            group = new Group(groupName);
+            await _messageService.AddGroupAsync(group);
+        }
+
+        group.Connections.Add(connection);
+
+        return await _messageService.SaveAllAsync();
+    }
+
+    private async Task RemoveFromMessageGroup()
+    {
+        var connection = await _messageService.GetConnectionAsync(Context.ConnectionId);
+        _messageService.RemoveConnection(connection);
+        await _messageService.SaveAllAsync();
     }
 
     private string GetGroupName(string callerUser, string otherUser)
