@@ -12,13 +12,23 @@ public class MessageHub : Hub
 {
     private readonly IMapper _mapper;
     private readonly IMessageService _messageService;
+    private readonly IHubContext<PresenceHub> _presenceHubContext;
+    private readonly PresenceTracker _presenceTracker;
     private readonly IUserService _userService;
 
-    public MessageHub(IMessageService messageService, IUserService userService, IMapper mapper)
+    public MessageHub(
+        IMessageService messageService,
+        IUserService userService,
+        IMapper mapper,
+        IHubContext<PresenceHub> presenceHubContext,
+        PresenceTracker presenceTracker
+    )
     {
         _messageService = messageService;
         _userService = userService;
         _mapper = mapper;
+        _presenceHubContext = presenceHubContext;
+        _presenceTracker = presenceTracker;
     }
 
     public override async Task OnConnectedAsync()
@@ -73,12 +83,27 @@ public class MessageHub : Hub
         {
             message.DateRead = DateTime.UtcNow;
         }
-        
+        else
+        {
+            var connections = await _presenceTracker.GetConnectionsForUser(recipient.UserName);
+            if (connections is not null)
+            {
+                await _presenceHubContext.Clients
+                    .Clients(connections)
+                    .SendAsync(
+                        "NewMessageReceived",
+                        new { username = sender.UserName, knownAs = sender.KnownAs }
+                    );
+            }
+        }
+
         await _messageService.AddMessageAsync(message);
 
         if (await _messageService.SaveAllAsync())
         {
-            await Clients.Group(groupName).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
+            await Clients
+                .Group(groupName)
+                .SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
         }
     }
 
