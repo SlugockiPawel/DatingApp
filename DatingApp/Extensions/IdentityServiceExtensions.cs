@@ -49,7 +49,6 @@ public static class IdentityServiceExtensions
                             !string.IsNullOrWhiteSpace(accessToken)
                             && path.StartsWithSegments("/hubs")
                         )
-                            ;
                         {
                             context.Token = accessToken;
                         }
