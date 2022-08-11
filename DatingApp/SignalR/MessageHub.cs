@@ -38,16 +38,19 @@ public class MessageHub : Hub
         var otherUser = httpContext.Request.Query["user"].ToString();
         var groupName = GetGroupName(loggedUser, otherUser);
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-        await AddToGroup(groupName);
+        var group = await AddToGroup(groupName);
+        await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
         var messages = await _messageService.GetMessageThread(loggedUser, otherUser);
 
-        await Clients.Group(groupName).SendAsync("ReceiveMessageThread", messages);
+        await Clients.Caller.SendAsync("ReceiveMessageThread", messages);
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-        await RemoveFromMessageGroup();
+        var group = await RemoveFromMessageGroup();
+        await Clients.Group(group.Name).SendAsync("UpdatedGroup", group);
+
         await base.OnDisconnectedAsync(exception);
     }
 
@@ -107,7 +110,7 @@ public class MessageHub : Hub
         }
     }
 
-    private async Task<bool> AddToGroup(string groupName)
+    private async Task<Group> AddToGroup(string groupName)
     {
         var group = await _messageService.GetMessageGroupAsync(groupName);
         var connection = new Connection(Context.ConnectionId, Context.User.GetUserName());
@@ -120,14 +123,28 @@ public class MessageHub : Hub
 
         group.Connections.Add(connection);
 
-        return await _messageService.SaveAllAsync();
+        if (await _messageService.SaveAllAsync())
+        {
+            return group;
+        }
+
+        throw new HubException("Failed to join group");
     }
 
-    private async Task RemoveFromMessageGroup()
+    private async Task<Group> RemoveFromMessageGroup()
     {
-        var connection = await _messageService.GetConnectionAsync(Context.ConnectionId);
+        var group = await _messageService.GetGroupForConnectionAsync(Context.ConnectionId);
+        var connection = group.Connections.FirstOrDefault(
+            c => c.ConnectionId == Context.ConnectionId
+        );
+
         _messageService.RemoveConnection(connection);
-        await _messageService.SaveAllAsync();
+        if (await _messageService.SaveAllAsync())
+        {
+            return group;
+        }
+
+        throw new HubException("Failed to remove from group");
     }
 
     private string GetGroupName(string callerUser, string otherUser)

@@ -37,6 +37,13 @@ public class MessageService : IMessageService
             .FirstOrDefaultAsync(g => g.Name == groupName);
     }
 
+    public async Task<Group> GetGroupForConnectionAsync(string connectionId)
+    {
+        return await _context.Groups
+            .Include(g => g.Connections)
+            .FirstOrDefaultAsync(g => g.Connections.Any(c => c.ConnectionId == connectionId));
+    }
+
     public async Task AddMessageAsync(Message message)
     {
         await _context.Messages.AddAsync(message);
