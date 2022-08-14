@@ -20,6 +20,4 @@ public interface IMessageService
         string currentUsername,
         string recipientUsername
     );
-
-    Task<bool> SaveAllAsync();
 }

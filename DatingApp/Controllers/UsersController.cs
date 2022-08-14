@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DatingApp.DTOs;
-using DatingApp.Enums;
 using DatingApp.Extensions;
 using DatingApp.Helpers;
 using DatingApp.Models;
@@ -17,13 +16,13 @@ public class UsersController : BaseApiController
 {
     private readonly IMapper _mapper;
     private readonly IPhotoService _photoService;
-    private readonly IUserService _userRepo;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UsersController(IUserService userRepo, IMapper mapper, IPhotoService photoService)
+    public UsersController(IMapper mapper, IPhotoService photoService, IUnitOfWork unitOfWork)
     {
-        _userRepo = userRepo;
         _mapper = mapper;
         _photoService = photoService;
+        _unitOfWork = unitOfWork;
     }
 
     // GET: api/<UsersController>
@@ -32,12 +31,13 @@ public class UsersController : BaseApiController
         [FromQuery] UserParams userParams
     )
     {
-        var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
+        var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
         userParams.CurrentUserName = user.UserName;
 
-        if (string.IsNullOrWhiteSpace(userParams.Gender)) userParams.Gender = user.Gender == "male" ? "female" : "male";
+        if (string.IsNullOrWhiteSpace(userParams.Gender))
+            userParams.Gender = user.Gender == "male" ? "female" : "male";
 
-        var users = await _userRepo.GetMembersAsync(userParams);
+        var users = await _unitOfWork.UserService.GetMembersAsync(userParams);
 
         Response.AddPaginationHeader(
             users.CurrentPage,
@@ -54,7 +54,7 @@ public class UsersController : BaseApiController
     public async Task<ActionResult<MemberDto>> GetUser(Guid id)
     {
         // old style, to show how to map using autoMapper
-        var user = await _userRepo.GetUserByIdAsync(id);
+        var user = await _unitOfWork.UserService.GetUserByIdAsync(id);
         var mappedUser = _mapper.Map<MemberDto>(user);
 
         return mappedUser is not null ? Ok(mappedUser) : NotFound();
@@ -67,7 +67,7 @@ public class UsersController : BaseApiController
         // we map entity using autoMapper directly in the repo query
 
         // var user = await _userRepo.GetUserByNameAsync(name);
-        var mappedUser = await _userRepo.GetMemberByNameAsync(name);
+        var mappedUser = await _unitOfWork.UserService.GetMemberByNameAsync(name);
 
         return mappedUser is not null ? Ok(mappedUser) : NotFound();
     }
@@ -76,29 +76,30 @@ public class UsersController : BaseApiController
     public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
     {
         // get username based on the token value
-        var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
+        var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
 
         _mapper.Map(memberUpdateDto, user);
-        _userRepo.Update(user);
+        _unitOfWork.UserService.Update(user);
 
-        return await _userRepo.SaveAllAsync() ? NoContent() : BadRequest("Failed to update user");
+        return await _unitOfWork.Complete() ? NoContent() : BadRequest("Failed to update user");
     }
 
     [HttpPost("add-photo")]
     public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
     {
-        var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
+        var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
         var result = await _photoService.AddPhotoAsync(file);
         if (result.Error is not null)
             return BadRequest(result.Error.Message);
 
         var photo = new Photo { Url = result.SecureUrl.AbsoluteUri, PublicId = result.PublicId };
 
-        if (user.Photos.Count == 0) photo.IsMain = true;
+        if (user.Photos.Count == 0)
+            photo.IsMain = true;
 
         user.Photos.Add(photo);
 
-        if (await _userRepo.SaveAllAsync())
+        if (await _unitOfWork.Complete())
             return CreatedAtRoute(
                 nameof(GetUserByName),
                 new { name = user.UserName },
@@ -112,10 +113,11 @@ public class UsersController : BaseApiController
     [HttpPut("set-main-photo/{photoId:int}")]
     public async Task<ActionResult> SetMainPhoto(int photoId)
     {
-        var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
+        var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
         var photo = user.Photos.FirstOrDefault(p => p.Id.Equals(photoId));
 
-        if (photo is null) return NotFound();
+        if (photo is null)
+            return NotFound();
 
         if (photo.IsMain)
             return BadRequest("This Photo is already a main photo");
@@ -126,7 +128,7 @@ public class UsersController : BaseApiController
 
         photo.IsMain = true;
 
-        if (await _userRepo.SaveAllAsync())
+        if (await _unitOfWork.Complete())
             return NoContent();
 
         return BadRequest("Failed to set main photo");
@@ -135,7 +137,7 @@ public class UsersController : BaseApiController
     [HttpDelete("delete-photo/{photoId:int}")]
     public async Task<ActionResult> DeletePhoto(int photoId)
     {
-        var user = await _userRepo.GetUserByNameAsync(User.GetUserName());
+        var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
         var photo = user.Photos.FirstOrDefault(p => p.Id.Equals(photoId));
 
         if (photo is null)
@@ -153,7 +155,7 @@ public class UsersController : BaseApiController
 
             user.Photos.Remove(photo);
 
-            if (await _userRepo.SaveAllAsync())
+            if (await _unitOfWork.Complete())
                 return Ok();
         }
 

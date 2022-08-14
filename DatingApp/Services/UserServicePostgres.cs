@@ -69,11 +69,6 @@ public class UserServicePostgres : IUserService
         _context.Entry(user).State = EntityState.Modified;
     }
 
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
-
     public async Task<bool> UserExistAsync(string username)
     {
         return await _context.Users.AnyAsync(u => u.UserName.Equals(username.ToLower()));

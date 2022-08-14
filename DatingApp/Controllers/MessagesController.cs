@@ -13,17 +13,11 @@ namespace DatingApp.Controllers;
 public class MessagesController : BaseApiController
 {
     private readonly IMapper _mapper;
-    private readonly IMessageService _messageService;
-    private readonly IUserService _userService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public MessagesController(
-        IUserService userService,
-        IMessageService messageService,
-        IMapper mapper
-    )
+    public MessagesController(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _userService = userService;
-        _messageService = messageService;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -35,8 +29,10 @@ public class MessagesController : BaseApiController
         if (username == createMessageDto.RecipientName.ToLower())
             return BadRequest("You cannot send messages to yourself");
 
-        var sender = await _userService.GetUserByNameAsync(username);
-        var recipient = await _userService.GetUserByNameAsync(createMessageDto.RecipientName);
+        var sender = await _unitOfWork.UserService.GetUserByNameAsync(username);
+        var recipient = await _unitOfWork.UserService.GetUserByNameAsync(
+            createMessageDto.RecipientName
+        );
 
         if (recipient is null)
             return NotFound();
@@ -50,9 +46,9 @@ public class MessagesController : BaseApiController
             Content = createMessageDto.Content
         };
 
-        await _messageService.AddMessageAsync(message);
+        await _unitOfWork.MessageService.AddMessageAsync(message);
 
-        if (await _messageService.SaveAllAsync())
+        if (await _unitOfWork.Complete())
             return Ok(_mapper.Map<MessageDto>(message));
 
         return BadRequest("Failed to send message");
@@ -65,7 +61,7 @@ public class MessagesController : BaseApiController
     {
         messageParams.UserName = User.GetUserName();
 
-        var messages = await _messageService.GetMessagesForUser(messageParams);
+        var messages = await _unitOfWork.MessageService.GetMessagesForUser(messageParams);
 
         Response.AddPaginationHeader(
             messages.CurrentPage,
@@ -77,20 +73,12 @@ public class MessagesController : BaseApiController
         return messages;
     }
 
-    [HttpGet("thread/{username}")]
-    public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
-    {
-        var loggedUsername = User.GetUserName();
-
-        return Ok(await _messageService.GetMessageThread(loggedUsername, username));
-    }
-
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteMessage(int id)
     {
         var username = User.GetUserName();
 
-        var message = await _messageService.GetMessageAsync(id);
+        var message = await _unitOfWork.MessageService.GetMessageAsync(id);
 
         if (message.SenderName != username && message.RecipientName != username)
             return Unauthorized();
@@ -102,10 +90,12 @@ public class MessagesController : BaseApiController
             message.RecipientDeleted = true;
 
         if (message.SenderDeleted && message.RecipientDeleted)
-            _messageService.DeleteMessage(message);
+            _unitOfWork.MessageService.DeleteMessage(message);
 
-        if (await _messageService.SaveAllAsync())
+        if (await _unitOfWork.Complete())
+        {
             return Ok();
+        }
 
         return BadRequest("Failed to delete a message");
     }

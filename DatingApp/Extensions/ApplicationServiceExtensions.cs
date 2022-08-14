@@ -22,14 +22,14 @@ public static class ApplicationServiceExtensions
         builder.Services.AddSingleton<PresenceTracker>();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         builder.Services.AddScoped<LogUserActivity>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<ITokenService, TokenService>();
-        builder.Services.AddScoped<IUserService, UserServicePostgres>();
         builder.Services.Configure<CloudinarySettings>(
             builder.Configuration.GetSection("CloudinarySettings")
         );
-        builder.Services.AddScoped<ILikeService, LikeService>();
+
         builder.Services.AddScoped<IPhotoService, PhotoService>();
-        builder.Services.AddScoped<IMessageService, MessageService>();
+
 
         return builder;
     }

@@ -11,21 +11,19 @@ namespace DatingApp.Controllers;
 [Authorize]
 public class LikesController : BaseApiController
 {
-    private readonly ILikeService _likeService;
-    private readonly IUserService _userService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public LikesController(ILikeService likeService, IUserService userService)
+    public LikesController(IUnitOfWork unitOfWork)
     {
-        _likeService = likeService;
-        _userService = userService;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpPost("{username}")]
     public async Task<ActionResult> AddLike(string username)
     {
         var sourceUserId = User.GetUserId();
-        var likedUser = await _userService.GetUserByNameAsync(username);
-        var sourceUser = await _likeService.GetUserWithLikes(sourceUserId);
+        var likedUser = await _unitOfWork.UserService.GetUserByNameAsync(username);
+        var sourceUser = await _unitOfWork.LikeService.GetUserWithLikes(sourceUserId);
 
         if (likedUser is null)
             return NotFound();
@@ -33,7 +31,7 @@ public class LikesController : BaseApiController
         if (sourceUser.UserName.Equals(username))
             return BadRequest("You cannot give yourself a like.");
 
-        var userLike = await _likeService.GetUserLike(sourceUserId, likedUser.Id);
+        var userLike = await _unitOfWork.LikeService.GetUserLike(sourceUserId, likedUser.Id);
 
         if (userLike is not null)
             return BadRequest("You already like this user");
@@ -42,7 +40,7 @@ public class LikesController : BaseApiController
 
         sourceUser.LikedUsers.Add(userLike);
 
-        if (await _userService.SaveAllAsync())
+        if (await _unitOfWork.Complete())
             return Ok();
 
         return BadRequest("Failed to like user");
@@ -54,7 +52,7 @@ public class LikesController : BaseApiController
     )
     {
         likesParams.UserId = User.GetUserId();
-        var users = await _likeService.GetUserLikes(likesParams);
+        var users = await _unitOfWork.LikeService.GetUserLikes(likesParams);
 
         Response.AddPaginationHeader(
             users.CurrentPage,
