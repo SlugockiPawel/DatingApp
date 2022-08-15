@@ -61,9 +61,12 @@ public class MessageService : IMessageService
 
     public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams)
     {
-        var query = _context.Messages.OrderByDescending(m => m.DateSent).AsQueryable();
+        var query = _context.Messages
+            .OrderByDescending(m => m.DateSent)
+            .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
+            .AsQueryable();
 
-        query = messageParams.Container switch
+        var messages = messageParams.Container switch
         {
             "Inbox"
                 => query.Where(
@@ -82,8 +85,6 @@ public class MessageService : IMessageService
                 )
         };
 
-        var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
-
         return await PagedList<MessageDto>.CreateAsync(
             messages,
             messageParams.PageNumber,
@@ -97,10 +98,6 @@ public class MessageService : IMessageService
     )
     {
         var messages = await _context.Messages
-            .Include(m => m.Sender)
-            .ThenInclude(u => u.Photos)
-            .Include(m => m.Recipient)
-            .ThenInclude(u => u.Photos)
             .Where(
                 m =>
                     (
@@ -115,6 +112,7 @@ public class MessageService : IMessageService
                     )
             )
             .OrderBy(m => m.DateSent)
+            .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
         var unreadMessages = messages
@@ -126,7 +124,7 @@ public class MessageService : IMessageService
             message.DateRead = DateTime.UtcNow;
         }
 
-        return _mapper.Map<IEnumerable<MessageDto>>(messages);
+        return messages;
     }
 
     public async Task AddGroupAsync(Group group)
