@@ -31,11 +31,12 @@ public class UsersController : BaseApiController
         [FromQuery] UserParams userParams
     )
     {
-        var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
-        userParams.CurrentUserName = user.UserName;
+        var username = User.GetUserName();
+        var gender = await _unitOfWork.UserService.GetUserGender(username);
+        userParams.CurrentUserName = username;
 
         if (string.IsNullOrWhiteSpace(userParams.Gender))
-            userParams.Gender = user.Gender == "male" ? "female" : "male";
+            userParams.Gender = gender == "male" ? "female" : "male";
 
         var users = await _unitOfWork.UserService.GetMembersAsync(userParams);
 

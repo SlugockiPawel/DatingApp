@@ -106,4 +106,12 @@ public class UserServicePostgres : IUserService
             .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync(u => u.UserName.Equals(name));
     }
+
+    public async Task<string> GetUserGender(string username)
+    {
+        return await _context.Users
+            .Where(u => u.UserName == username)
+            .Select(u => u.Gender)
+            .FirstOrDefaultAsync();
+    }
 }

@@ -14,4 +14,5 @@ public interface IUserService
     Task<bool> UserExistAsync(string username);
     Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
     Task<MemberDto> GetMemberByNameAsync(string name);
+    Task<string> GetUserGender(string username);
 }
