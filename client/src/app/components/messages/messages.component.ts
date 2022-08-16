@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Message} from '../../_models/message';
 import {Pagination} from '../../_models/pagination';
+import {ConfirmService} from '../../_services/confirm.service';
 import {MessageService} from '../../_services/message.service';
 
 @Component({
@@ -16,10 +17,13 @@ export class MessagesComponent implements OnInit {
   pageSize = 5;
   loading = false;
 
-  constructor(private readonly messageService: MessageService) {
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly confirmService: ConfirmService
+  ) {
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadMessages();
   }
 
@@ -27,7 +31,7 @@ export class MessagesComponent implements OnInit {
     this.loading = true;
     this.messageService
       .getMessages(this.pageNumber, this.pageSize, this.container)
-      .subscribe((response) => {
+      .subscribe(response => {
         this.messages = response.result;
         this.pagination = response.pagination;
         this.loading = false;
@@ -42,11 +46,21 @@ export class MessagesComponent implements OnInit {
   }
 
   deleteMessage(id: number) {
-    return this.messageService.deleteMessage(id).subscribe(() => {
-      this.messages.splice(
-        this.messages.findIndex((m) => m.id === id),
-        1
-      );
-    });
+    this.confirmService
+      .confirm(
+        'Confirm delete message',
+        'Are you sure you want to delete the message?',
+        'Yes'
+      )
+      .subscribe(result => {
+        if (result) {
+          return this.messageService.deleteMessage(id).subscribe(() =>
+            this.messages.splice(
+              this.messages.findIndex(m => m.id === id),
+              1
+            )
+          );
+        }
+      });
   }
 }
