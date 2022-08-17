@@ -28,6 +28,7 @@ public class ApplicationDbContext
     public DbSet<Message> Messages { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Connection> Connections { get; set; }
+    public DbSet<Photo> Photos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -89,8 +90,10 @@ public static class UtcDateAnnotation
     private static readonly ValueConverter<DateTime?, DateTime?> UtcNullableConverter =
         new(v => v, v => v == null ? v : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));
 
-    public static PropertyBuilder<TProperty> IsUtc<TProperty>(this PropertyBuilder<TProperty> builder,
-        bool isUtc = true)
+    public static PropertyBuilder<TProperty> IsUtc<TProperty>(
+        this PropertyBuilder<TProperty> builder,
+        bool isUtc = true
+    )
     {
         return builder.HasAnnotation(IsUtcAnnotation, isUtc);
     }
