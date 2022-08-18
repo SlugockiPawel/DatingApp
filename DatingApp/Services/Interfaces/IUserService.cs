@@ -13,6 +13,6 @@ public interface IUserService
     Task<UserDto> RegisterUserAsync(RegisterDto registerDto);
     Task<bool> UserExistAsync(string username);
     Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
-    Task<MemberDto> GetMemberByNameAsync(string name);
+    Task<MemberDto> GetMemberByNameAsync(string name, bool isCurrentUser);
     Task<string> GetUserGender(string username);
 }

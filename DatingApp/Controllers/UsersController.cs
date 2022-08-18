@@ -65,10 +65,8 @@ public class UsersController : BaseApiController
     [HttpGet("{name}", Name = "GetUserByName")]
     public async Task<ActionResult<MemberDto>> GetUserByName(string name)
     {
-        // we map entity using autoMapper directly in the repo query
-
-        // var user = await _userRepo.GetUserByNameAsync(name);
-        var mappedUser = await _unitOfWork.UserService.GetMemberByNameAsync(name);
+        var isCurrentUser = User.GetUserName() == name;
+        var mappedUser = await _unitOfWork.UserService.GetMemberByNameAsync(name, isCurrentUser);
 
         return mappedUser is not null ? Ok(mappedUser) : NotFound();
     }

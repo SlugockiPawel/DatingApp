@@ -99,12 +99,20 @@ public class UserServicePostgres : IUserService
         );
     }
 
-    public async Task<MemberDto> GetMemberByNameAsync(string name)
+    public async Task<MemberDto> GetMemberByNameAsync(string name, bool isCurrentUser)
     {
         // do not need to .Include(u=> u.Photo), mapper and EF will perform left join
-        return await _context.Users
+        var query = _context.Users
+            .Where(u => u.UserName == name)
             .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-            .SingleOrDefaultAsync(u => u.UserName.Equals(name));
+            .AsQueryable();
+
+        if (isCurrentUser)
+        {
+            query.IgnoreQueryFilters();
+        }
+
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<string> GetUserGender(string username)
