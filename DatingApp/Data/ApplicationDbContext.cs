@@ -34,6 +34,8 @@ public class ApplicationDbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
+
         modelBuilder
             .Entity<AppUser>()
             .HasMany(user => user.UserRoles)
