@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using DatingApp.Data;
 using DatingApp.DTOs;
@@ -16,10 +15,7 @@ public class PhotoService : IPhotoService
     private readonly Cloudinary _cloudinary;
     private readonly ApplicationDbContext _context;
 
-    public PhotoService(
-        IOptions<CloudinarySettings> cloudinaryConfig,
-        ApplicationDbContext context
-    )
+    public PhotoService(IOptions<CloudinarySettings> cloudinaryConfig, ApplicationDbContext context)
     {
         _context = context;
         var cloudinaryAccount = new Account

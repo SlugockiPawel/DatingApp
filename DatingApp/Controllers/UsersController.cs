@@ -15,13 +15,12 @@ namespace DatingApp.Controllers;
 public class UsersController : BaseApiController
 {
     private readonly IMapper _mapper;
-    private readonly IPhotoService _photoService;
+    
     private readonly IUnitOfWork _unitOfWork;
 
-    public UsersController(IMapper mapper, IPhotoService photoService, IUnitOfWork unitOfWork)
+    public UsersController(IMapper mapper, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
-        _photoService = photoService;
         _unitOfWork = unitOfWork;
     }
 
@@ -87,7 +86,7 @@ public class UsersController : BaseApiController
     public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
     {
         var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
-        var result = await _photoService.AddPhotoAsync(file);
+        var result = await _unitOfWork.PhotoService.AddPhotoAsync(file);
         if (result.Error is not null)
             return BadRequest(result.Error.Message);
 
@@ -147,7 +146,7 @@ public class UsersController : BaseApiController
 
         if (photo.PublicId is not null)
         {
-            var result = await _photoService.DeletePhotoAsync(photo.PublicId);
+            var result = await _unitOfWork.PhotoService.DeletePhotoAsync(photo.PublicId);
 
             if (result.Error is not null)
                 return BadRequest(result.Error.Message);
