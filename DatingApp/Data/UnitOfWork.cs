@@ -29,7 +29,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserService UserService => new UserServicePostgres(_context, _tokenService, _mapper);
     public IMessageService MessageService => new MessageService(_context, _mapper);
     public ILikeService LikeService => new LikeService(_context);
-    public IPhotoService PhotoService => new PhotoService(_cloudinaryConfig, _context);
+    public IPhotoService PhotoService => new PhotoService(_cloudinaryConfig, _context, _mapper);
 
     public async Task<bool> Complete()
     {
