@@ -1,5 +1,6 @@
 ﻿using DatingApp.Enums;
 using DatingApp.Models;
+using DatingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,13 @@ namespace DatingApp.Controllers;
 
 public class AdminsController : BaseApiController
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<AppUser> _userManager;
 
-    public AdminsController(UserManager<AppUser> userManager)
+    public AdminsController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
+        _unitOfWork = unitOfWork;
     }
 
     [Authorize(Policy = $"{nameof(AuthPolicies.RequireAdminRole)}")]
@@ -63,8 +66,10 @@ public class AdminsController : BaseApiController
 
     [Authorize(Policy = $"{nameof(AuthPolicies.ModeratePhotoRole)}")]
     [HttpGet("photos-to-moderate")]
-    public IActionResult GetPhotosForModeration()
+    public async Task<ActionResult> GetPhotosForModeration()
     {
-        return Ok("Admins or moderators can see this");
+        var photos = await _unitOfWork.PhotoService.GetUnapprovedPhotosAsync();
+
+        return Ok(photos);
     }
 }
