@@ -93,4 +93,25 @@ public class AdminsController : BaseApiController
 
         return BadRequest("Cannot approve the photo");
     }
+
+    [Authorize(Policy = $"{nameof(AuthPolicies.ModeratePhotoRole)}")]
+    [HttpDelete("reject-photo/{photoId:int}")]
+    public async Task<ActionResult> RejectPhoto(int photoId)
+    {
+        var photo = await _unitOfWork.PhotoService.GetPhotoByIdAsync(photoId);
+
+        if (photo.PublicId is not null)
+        {
+            await _unitOfWork.PhotoService.DeletePhotoAsync(photo.PublicId);
+        }
+
+        _unitOfWork.PhotoService.RemovePhoto(photo);
+
+        if (await _unitOfWork.Complete())
+        {
+            return Ok();
+        }
+
+        return BadRequest("Could not reject a photo");
+    }
 }
