@@ -72,4 +72,25 @@ public class AdminsController : BaseApiController
 
         return Ok(photos);
     }
+
+    [Authorize(Policy = $"{nameof(AuthPolicies.ModeratePhotoRole)}")]
+    [HttpPut("approve-photo/{photoId:int}")]
+    public async Task<ActionResult> ApprovePhoto(int photoId)
+    {
+        var photo = await _unitOfWork.PhotoService.GetPhotoByIdAsync(photoId);
+
+        if (photo is null)
+        {
+            return BadRequest("Cannot approve the photo");
+        }
+
+        photo.IsApproved = true;
+
+        if (await _unitOfWork.Complete())
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Cannot approve the photo");
+    }
 }
