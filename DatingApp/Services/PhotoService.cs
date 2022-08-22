@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using DatingApp.Data;
 using DatingApp.DTOs;
@@ -16,16 +14,10 @@ public class PhotoService : IPhotoService
 {
     private readonly Cloudinary _cloudinary;
     private readonly ApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public PhotoService(
-        IOptions<CloudinarySettings> cloudinaryConfig,
-        ApplicationDbContext context,
-        IMapper mapper
-    )
+    public PhotoService(IOptions<CloudinarySettings> cloudinaryConfig, ApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
         var cloudinaryAccount = new Account
         {
             Cloud = cloudinaryConfig.Value.CloudName,
@@ -70,7 +62,16 @@ public class PhotoService : IPhotoService
         return await _context.Photos
             .IgnoreQueryFilters()
             .Where(p => !p.IsApproved)
-            .ProjectTo<PhotoForApprovalDto>(_mapper.ConfigurationProvider)
+            .Select(
+                p =>
+                    new PhotoForApprovalDto
+                    {
+                        Id = p.Id,
+                        Url = p.Url,
+                        IsApproved = p.IsApproved,
+                        UserName = p.AppUser.UserName
+                    }
+            )
             .ToListAsync();
     }
 
