@@ -107,7 +107,7 @@ public class UserServicePostgres : IUserService
 
         if (isCurrentUser)
         {
-            query.IgnoreQueryFilters();
+           query = query.IgnoreQueryFilters();
         }
 
         return await query.FirstOrDefaultAsync();
