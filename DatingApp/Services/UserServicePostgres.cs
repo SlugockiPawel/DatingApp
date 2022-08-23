@@ -122,4 +122,33 @@ public class UserServicePostgres : IUserService
             .Select(u => u.Gender)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<AppUser> GetUserByPhotoIdAsync(int photoId)
+    {
+        try
+        {
+            return await _context.Users
+                .IgnoreQueryFilters()
+                .Include(u => u.Photos)
+                .FirstOrDefaultAsync(u => u.Photos.Any(p => p.Id == photoId));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public bool HasMainPhoto(AppUser user)
+    {
+        try
+        {
+            return user.Photos.Any(p => p.IsMain);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

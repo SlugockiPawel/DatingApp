@@ -15,4 +15,6 @@ public interface IUserService
     Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
     Task<MemberDto> GetMemberByNameAsync(string name, bool isCurrentUser);
     Task<string> GetUserGender(string username);
+    Task<AppUser> GetUserByPhotoIdAsync(int photoId);
+    bool HasMainPhoto(AppUser user);
 }
