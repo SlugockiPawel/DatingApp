@@ -86,6 +86,12 @@ public class AdminsController : BaseApiController
 
         photo.IsApproved = true;
 
+        var user = await _unitOfWork.UserService.GetUserByPhotoIdAsync(photoId);
+        if (!_unitOfWork.UserService.HasMainPhoto(user))
+        {
+            photo.IsMain = true;
+        }
+
         if (await _unitOfWork.Complete())
         {
             return NoContent();

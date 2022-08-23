@@ -15,7 +15,7 @@ namespace DatingApp.Controllers;
 public class UsersController : BaseApiController
 {
     private readonly IMapper _mapper;
-    
+
     private readonly IUnitOfWork _unitOfWork;
 
     public UsersController(IMapper mapper, IUnitOfWork unitOfWork)
@@ -88,12 +88,11 @@ public class UsersController : BaseApiController
         var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
         var result = await _unitOfWork.PhotoService.AddPhotoAsync(file);
         if (result.Error is not null)
+        {
             return BadRequest(result.Error.Message);
+        }
 
         var photo = new Photo { Url = result.SecureUrl.AbsoluteUri, PublicId = result.PublicId };
-
-        if (user.Photos.Count == 0)
-            photo.IsMain = true;
 
         user.Photos.Add(photo);
 
@@ -103,7 +102,6 @@ public class UsersController : BaseApiController
                 new { name = user.UserName },
                 _mapper.Map<PhotoDto>(photo)
             );
-        // return _mapper.Map<PhotoDto>(photo);
 
         return BadRequest("Problem adding photo");
     }
