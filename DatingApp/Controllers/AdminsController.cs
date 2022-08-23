@@ -112,12 +112,7 @@ public class AdminsController : BaseApiController
         }
 
         _unitOfWork.PhotoService.RemovePhoto(photo);
-
-        if (await _unitOfWork.Complete())
-        {
-            return Ok();
-        }
-
-        return BadRequest("Could not reject a photo");
+        await _unitOfWork.Complete();
+        return NoContent();
     }
 }
