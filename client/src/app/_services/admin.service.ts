@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { Photo } from '../_models/photo';
-import { User } from '../_models/user';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
+import {Photo} from '../_models/photo';
+import {User} from '../_models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,8 @@ import { User } from '../_models/user';
 export class AdminService {
   baseUrl = environment.apiUrl;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {
+  }
 
   getUsersWithRoles() {
     return this.http.get<Partial<User[]>>(
