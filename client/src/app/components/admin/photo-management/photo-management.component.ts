@@ -14,6 +14,7 @@ export class PhotoManagementComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getPhotosForModeration();
   }
 
   getPhotosForModeration() {
@@ -27,13 +28,16 @@ export class PhotoManagementComponent implements OnInit {
       this.photosToApprove.splice(
         this.photosToApprove.findIndex(p => p.id === photoId),
         1
-      ));
+      )
+    );
   }
 
   rejectPhoto(photoId: number) {
     this.adminService.rejectPhoto(photoId).subscribe(() =>
       this.photosToApprove.splice(
-        this.photosToApprove.findIndex(p => p.id === photoId)
-      ));
+        this.photosToApprove.findIndex(p => p.id === photoId),
+        1
+      )
+    );
   }
 }
