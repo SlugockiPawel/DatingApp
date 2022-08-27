@@ -34,12 +34,13 @@ public class UserServicePostgres : IUserService
     public async Task<AppUser> GetUserByIdAsync(Guid id)
     {
         // return await _context.Users.FindAsync(id);
-        return await _context.Users.Include(u => u.Photos).SingleOrDefaultAsync(u => u.Id == id);
+        return await _context.Users.IgnoreQueryFilters().Include(u => u.Photos).SingleOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task<AppUser> GetUserByNameAsync(string name)
     {
         return await _context.Users
+            .IgnoreQueryFilters()
             .Include(u => u.Photos)
             .SingleOrDefaultAsync(u => u.UserName.Equals(name));
     }
@@ -107,7 +108,7 @@ public class UserServicePostgres : IUserService
 
         if (isCurrentUser)
         {
-           query = query.IgnoreQueryFilters();
+            query = query.IgnoreQueryFilters();
         }
 
         return await query.FirstOrDefaultAsync();
