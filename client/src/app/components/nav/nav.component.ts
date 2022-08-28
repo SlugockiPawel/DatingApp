@@ -11,6 +11,7 @@ import {Roles} from '../../Enums/roles';
 export class NavComponent implements OnInit {
   model: any = {};
   rolesEnum = Roles;
+  isShown = false;
 
   constructor(public accountService: AccountService, private router: Router) {
   }

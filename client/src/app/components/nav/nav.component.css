@@ -1,8 +1,12 @@
 .dropdown-toggle, .dropdown-item {
-    cursor: pointer
+  cursor: pointer
 }
 
 img {
   max-height: 50px;
   display: inline;
+}
+
+.toggler-background {
+  background-color: #dc307c;
 }
