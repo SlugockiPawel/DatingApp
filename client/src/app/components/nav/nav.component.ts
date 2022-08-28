@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '../../_services/account.service';
+import {Roles} from '../../Enums/roles';
 
 @Component({
   selector: 'app-nav',
@@ -12,6 +13,7 @@ import { AccountService } from '../../_services/account.service';
 })
 export class NavComponent implements OnInit {
   model: any = {};
+  rolesEnum = Roles;
 
 
   constructor(public accountService: AccountService, private router: Router,
