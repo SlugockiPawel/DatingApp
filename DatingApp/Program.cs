@@ -62,9 +62,9 @@ app.MapHub<MessageHub>("hubs/message");
 
 app.Run();
 
-// TODO Errors in navbar should be visible only for Admins
 // TODO add pancake to navbar
 // TODO Add Learn More functionality
 // TODO In Register form, add text that registering does not require valid email address
 // TODO Add Login buttons for: DemoFemale, DemoMale, DemoAdmin
 // TODO make main page responsive for all screen sizes
+// TODO add rate limiter
