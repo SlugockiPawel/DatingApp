@@ -2,18 +2,22 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {map, ReplaySubject} from 'rxjs';
 import {environment} from 'src/environments/environment';
+import {Login} from '../_models/login';
 import {User} from '../_models/user';
-import {PresenceService} from "./presence.service";
+import {PresenceService} from './presence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private baseurl: string = environment.apiUrl;
+  private baseurl = environment.apiUrl;
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private readonly http: HttpClient, private readonly presence: PresenceService) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly presence: PresenceService
+  ) {
   }
 
   registerUser(model: any) {
@@ -27,10 +31,10 @@ export class AccountService {
     );
   }
 
-  login(model: any) {
+  login(model: Login) {
     return this.http.post(this.baseurl + 'account/login', model).pipe(
       map((response: User) => {
-        const user: User = response;
+        const user = response;
         if (user) {
           this.setCurrentUser(user);
           this.presence.createHubConnection(user);

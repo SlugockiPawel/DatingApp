@@ -8,22 +8,26 @@
       <li>Add photos (each photo has to be approved by admin/moderator to be visible</li>
       <li>Communicate with other users- via real time chat and message box</li>
     </ul>
-    <h6>If you don't want to register another user- feel free to login as demo users using buttons below</h6>
+    <h6 *ngIf="!(accountService.currentUser$ | async)">If you don't want to register another user- feel free to login as
+      demo users using buttons below</h6>
+    <h6 *ngIf="accountService.currentUser$ | async">To login as one of the demo users- please logout first</h6>
     <hr>
   </div>
 
-
   <div class="col-12 d-sm-flex justify-content-sm-between">
-    <button (click)="cancel()" class="btn btn-dark mb-1 " type="button">Login As Oliver</button>
-    <button (click)="cancel()" class="btn btn-dark mb-1 mx-1" type="button">Login As Fay</button>
-    <button (click)="cancel()" class="btn btn-dark  mb-1 " type="button">Login as Admin</button>
+    <button (click)="demoLogin('oliver')" [disabled]="accountService.currentUser$ | async" class="btn btn-light mb-1 "
+            type="button">Login As Oliver
+    </button>
+    <button (click)="demoLogin('fay')" [disabled]="accountService.currentUser$ | async" class="btn btn-danger mb-1 mx-1"
+            type="button">Login As Fay
+    </button>
+    <button (click)="demoLogin('admin')" [disabled]="accountService.currentUser$ | async" class="btn btn-secondary  mb-1 "
+            type="button">Login as Admin
+    </button>
   </div>
 
   <div class="col">
-    <button (click)="cancel()" class="btn btn-dark btn-block mb-1 mt-4" type="button">Close</button>
-
+    <button (click)="cancel()" class="btn btn-sm btn-dark btn-block mb-1 mt-2" type="button">Close</button>
   </div>
-
-
 </div>
 
