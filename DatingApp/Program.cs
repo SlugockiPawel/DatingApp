@@ -62,7 +62,7 @@ app.MapHub<MessageHub>("hubs/message");
 
 app.Run();
 
-// TODO Add Learn More functionality
-// TODO Add Login buttons for: DemoFemale, DemoMale, DemoAdmin
-// TODO make main page responsive for all screen sizes
+
+// TODO in user details page, like button does not work
+// TODO Make /members view responsive
 // TODO add rate limiter for registering user (1 per 30min?)
