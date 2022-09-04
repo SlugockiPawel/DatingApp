@@ -64,5 +64,6 @@ app.Run();
 
 
 // TODO in user details page, like button does not work
-// TODO Make /members view responsive
-// TODO add rate limiter for registering user (1 per 30min?)
+// TODO Make member details view responsive
+// TODO add rate limiter for registering user (1 per day?)
+// TODO add rate limiter to photo upload (3 photos per day?)
