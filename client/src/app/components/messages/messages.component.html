@@ -12,11 +12,15 @@
   </div>
 </div>
 
-<div *ngIf="messages?.length === 0" class="row">
+<div *ngIf="loading" class="row">
+  <h3>Loading...</h3>
+</div>
+
+<div *ngIf="messages?.length === 0 && !loading" class="row">
   <h3>No Messages</h3>
 </div>
 
-<div *ngIf="messages?.length > 0" class="row">
+<div *ngIf="messages?.length > 0 && !loading" class="row">
   <table class="table table-hover" style="cursor: pointer">
     <tr>
       <th style="width: 40%">Message</th>
@@ -45,8 +49,7 @@
       <td>{{message.dateSent | timeago}}</td>
       <td>
         <button
-          (click)="$event.stopPropagation()"
-          (click)="deleteMessage(message.id)"
+          (click)="$event.stopPropagation(); deleteMessage(message.id)"
           class="btn btn-danger">Delete
         </button>
       </td>
