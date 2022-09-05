@@ -2,13 +2,15 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions,} from '@kolkov/ngx-gallery';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
+import {ToastrService} from 'ngx-toastr';
 import {take} from 'rxjs';
+import {Member} from '../../../_models/member';
 import {Message} from '../../../_models/message';
 import {User} from '../../../_models/user';
 import {AccountService} from '../../../_services/account.service';
+import {MembersService} from '../../../_services/members.service';
 import {MessageService} from '../../../_services/message.service';
 import {PresenceService} from '../../../_services/presence.service';
-import {Member} from './../../../_models/member';
 
 @Component({
   selector: 'app-member-detail',
@@ -29,7 +31,9 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     private readonly messageService: MessageService,
     readonly presenceService: PresenceService,
     private readonly accountService: AccountService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly membersService: MembersService,
+    private readonly toastr: ToastrService
   ) {
     this.accountService.currentUser$
       .pipe(take(1))
@@ -97,5 +101,11 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.messageService.stopHubConnection();
+  }
+
+  addLike(member: Member) {
+    this.membersService
+      .addLike(member.userName)
+      .subscribe(() => this.toastr.success('You have liked ' + member.knownAs));
   }
 }
