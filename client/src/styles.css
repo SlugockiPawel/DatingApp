@@ -1,5 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
+
 .member-tabset > .nav-tabs {
-  margin-bottom: 0.4rem;
+  margin-bottom: 2rem;
+}
+
+
+@media screen and (max-width: 767px) {
+  .member-tabset > ul {
+    display: flex;
+    justify-content: center;
+  }
 }
