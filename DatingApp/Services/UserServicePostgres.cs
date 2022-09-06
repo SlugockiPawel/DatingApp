@@ -42,6 +42,7 @@ public class UserServicePostgres : IUserService
         return await _context.Users
             .IgnoreQueryFilters()
             .Include(u => u.Photos)
+            .Include(u =>u.LikedUsers)
             .SingleOrDefaultAsync(u => u.UserName.Equals(name));
     }
 

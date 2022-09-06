@@ -1,4 +1,6 @@
-﻿namespace DatingApp.DTOs;
+﻿using DatingApp.Models;
+
+namespace DatingApp.DTOs;
 
 public class MemberDto
 {
@@ -15,6 +17,7 @@ public class MemberDto
     public string Interests { get; set; }
     public string City { get; set; }
     public string Country { get; set; }
+    public bool LikedByCurrentUser { get; set; }
 
     // Navigation property 1 User => many Photos
     public ICollection<PhotoDto> Photos { get; set; }

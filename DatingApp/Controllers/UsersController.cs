@@ -34,10 +34,18 @@ public class UsersController : BaseApiController
         var gender = await _unitOfWork.UserService.GetUserGender(username);
         userParams.CurrentUserName = username;
 
+        var currentUser = await _unitOfWork.UserService.GetUserByNameAsync(username);
+
+
         if (string.IsNullOrWhiteSpace(userParams.Gender))
             userParams.Gender = gender == "male" ? "female" : "male";
 
         var users = await _unitOfWork.UserService.GetMembersAsync(userParams);
+        
+        foreach (var user in users)
+        {
+            user.LikedByCurrentUser = currentUser.LikedUsers.Any(ul => ul.LikedUserId == user.Id);
+        }
 
         Response.AddPaginationHeader(
             users.CurrentPage,
@@ -45,7 +53,7 @@ public class UsersController : BaseApiController
             users.TotalCount,
             users.TotalPages
         );
-
+        
         return Ok(users);
     }
 
