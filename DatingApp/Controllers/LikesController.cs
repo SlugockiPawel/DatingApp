@@ -26,22 +26,30 @@ public class LikesController : BaseApiController
         var sourceUser = await _unitOfWork.LikeService.GetUserWithLikes(sourceUserId);
 
         if (likedUser is null)
+        {
             return NotFound();
+        }
 
         if (sourceUser.UserName.Equals(username))
+        {
             return BadRequest("You cannot give yourself a like.");
+        }
 
         var userLike = await _unitOfWork.LikeService.GetUserLike(sourceUserId, likedUser.Id);
 
         if (userLike is not null)
+        {
             return BadRequest("You already like this user");
+        }
 
         userLike = new AppUserLike { SourceUserId = sourceUserId, LikedUserId = likedUser.Id };
 
         sourceUser.LikedUsers.Add(userLike);
 
         if (await _unitOfWork.Complete())
+        {
             return Ok();
+        }
 
         return BadRequest("Failed to like user");
     }

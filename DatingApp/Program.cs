@@ -63,7 +63,6 @@ app.MapHub<MessageHub>("hubs/message");
 app.Run();
 
 
-// TODO in user details page, like button does not work
-// TODO Make member details view responsive
+// TODO Make like button and icon as a toggle - if user is liked, icon have different color
 // TODO add rate limiter for registering user (1 per day?)
 // TODO add rate limiter to photo upload (3 photos per day?)
