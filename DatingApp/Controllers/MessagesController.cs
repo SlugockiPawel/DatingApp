@@ -94,7 +94,7 @@ public class MessagesController : BaseApiController
 
         if (await _unitOfWork.Complete())
         {
-            return Ok();
+            return NoContent();
         }
 
         return BadRequest("Failed to delete a message");

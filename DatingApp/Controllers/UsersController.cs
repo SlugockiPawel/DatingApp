@@ -160,7 +160,7 @@ public class UsersController : BaseApiController
             user.Photos.Remove(photo);
 
             if (await _unitOfWork.Complete())
-                return Ok();
+                return NoContent();
         }
 
         return BadRequest("Failed to delete the photo");
