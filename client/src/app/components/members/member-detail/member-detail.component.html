@@ -31,7 +31,9 @@
 
       <div class="card-footer">
         <div class="btn-group d-flex">
-          <button (click)="addLike(member)" class="btn btn-primary">Like</button>
+          <button (click)="member.likedByCurrentUser ? removeLike(member) : addLike(member)"
+                  [ngClass]="member.likedByCurrentUser ? 'btn-dark' : 'btn-primary'"
+                  class="btn btn-sm">{{ member.likedByCurrentUser ? 'Unlike' : 'Like' }}</button>
           <button (click)="selectTab(3)" class="btn btn-success">Message</button>
         </div>
       </div>

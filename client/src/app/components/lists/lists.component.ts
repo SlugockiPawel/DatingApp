@@ -18,14 +18,14 @@ export class ListsComponent implements OnInit {
   constructor(private readonly memberService: MembersService) {
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadLikes();
   }
 
   loadLikes() {
     this.memberService
       .getLikes(this.predicate, this.pageNumber, this.pageSize)
-      .subscribe((response) => {
+      .subscribe(response => {
         this.members = response.result;
         this.pagination = response.pagination;
       });
@@ -34,5 +34,12 @@ export class ListsComponent implements OnInit {
   pageChanged(event: any) {
     this.pageNumber = event.page;
     this.loadLikes();
+  }
+
+  handleUserDislike($event: string) {
+    this.members.splice(
+      this.members.findIndex(m => m.userName === $event),
+      1
+    );
   }
 }

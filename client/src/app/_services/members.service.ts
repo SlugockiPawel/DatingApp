@@ -12,7 +12,7 @@ import {getPaginatedResult, getPaginationHeaders} from './paginationHelper';
   providedIn: 'root',
 })
 export class MembersService {
-  baseUrl: string = environment.apiUrl;
+  baseUrl = environment.apiUrl;
   members: Member[] = [];
   memberCache = new Map();
   user: User;
@@ -31,7 +31,7 @@ export class MembersService {
 
   private _userParams: UserParams;
 
-  get userParams(): UserParams {
+  get userParams() {
     return this._userParams;
   }
 
@@ -39,7 +39,7 @@ export class MembersService {
     this._userParams = value;
   }
 
-  resetUserParams(): UserParams {
+  resetUserParams() {
     this.userParams = new UserParams(this.user);
     return this.userParams;
   }
@@ -67,7 +67,7 @@ export class MembersService {
       params,
       this.http
     ).pipe(
-      map((response) => {
+      map(response => {
         this.memberCache.set(Object.values(userParams).join('-'), response);
         return response;
       })
@@ -106,6 +106,10 @@ export class MembersService {
 
   addLike(userName: string) {
     return this.http.post(this.baseUrl + 'likes/' + userName, {});
+  }
+
+  removeLike(userName: string) {
+    return this.http.delete(this.baseUrl + 'likes/' + userName, {});
   }
 
   getLikes(predicate: string, pageNumber: number, pageSize: number) {

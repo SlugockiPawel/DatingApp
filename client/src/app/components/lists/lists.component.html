@@ -19,7 +19,7 @@
 <div class="container mt-3">
   <div class="row row-cols-auto  justify-content-center">
     <div *ngFor="let member of members" class="col">
-      <app-member-card [member]="member"></app-member-card>
+      <app-member-card (dislikedUsername)="handleUserDislike($event)" [member]="member"></app-member-card>
     </div>
   </div>
 </div>

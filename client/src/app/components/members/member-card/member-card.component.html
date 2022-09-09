@@ -1,3 +1,4 @@
+<!--suppress JSVoidFunctionReturnValueUsed -->
 <div class="card mb-4">
   <div class="card-img-wrapper">
     <img alt="{{member.knownAs}} photo" class="card-img-top" src="{{member.photoUrl || './assets/user.png'}}">
@@ -9,7 +10,9 @@
       </li>
 
       <li class="list-inline-item">
-        <button (click)="addLike(member)" class="btn btn-primary">
+        <button
+          (click)="!member.likedByCurrentUser?addLike(member):[removeLike(member), dislikeMember(member.userName)]"
+          class="btn btn-primary">
           <i [ngStyle]="{'color': member.likedByCurrentUser ? 'black' : ''}" class="fa fa-heart"></i>
         </button>
       </li>
