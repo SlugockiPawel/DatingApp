@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
+import {Member} from '../../../_models/member';
 import {MembersService} from '../../../_services/members.service';
 import {PresenceService} from '../../../_services/presence.service';
-import {Member} from './../../../_models/member';
 
 @Component({
   selector: 'app-member-card',
@@ -11,7 +11,7 @@ import {Member} from './../../../_models/member';
 })
 export class MemberCardComponent implements OnInit {
   @Input() member: Member;
-  @Output() dislikedUsername = new EventEmitter<string>();
+  @Output() dislikeUser = new EventEmitter<string>();
 
   constructor(
     private readonly membersService: MembersService,
@@ -34,10 +34,11 @@ export class MemberCardComponent implements OnInit {
     this.membersService.removeLike(member.userName).subscribe(() => {
       this.member.likedByCurrentUser = false;
       this.toastr.success('You have removed like for ' + member.knownAs);
+      this.dislikeMember(member.userName);
     });
   }
 
   dislikeMember(username: string) {
-    this.dislikedUsername.emit(username);
+    this.dislikeUser.emit(username);
   }
 }

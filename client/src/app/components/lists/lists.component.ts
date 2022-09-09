@@ -31,7 +31,7 @@ export class ListsComponent implements OnInit {
       });
   }
 
-  pageChanged(event: any) {
+  handlePageChanged(event: any) {
     this.pageNumber = event.page;
     this.loadLikes();
   }

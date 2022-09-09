@@ -19,7 +19,7 @@
 <div class="container mt-3">
   <div class="row row-cols-auto  justify-content-center">
     <div *ngFor="let member of members" class="col">
-      <app-member-card (dislikedUsername)="handleUserDislike($event)" [member]="member"></app-member-card>
+      <app-member-card (dislikeUser)="handleUserDislike($event)" [member]="member"></app-member-card>
     </div>
   </div>
 </div>
@@ -27,7 +27,7 @@
 
 <div *ngIf="pagination" class="row justify-content-center">
   <div class="col-12 d-flex justify-content-center">
-    <pagination (pageChanged)="pageChanged($event)"
+    <pagination (pageChanged)="handlePageChanged($event)"
                 [(ngModel)]="pagination.currentPage"
                 [boundaryLinks]="true"
                 [itemsPerPage]="pagination.itemsPerPage"
