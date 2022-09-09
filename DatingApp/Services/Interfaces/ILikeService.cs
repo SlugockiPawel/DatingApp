@@ -9,4 +9,5 @@ public interface ILikeService
     Task<AppUserLike> GetUserLike(Guid sourceUserId, Guid likedUserId);
     Task<AppUser> GetUserWithLikes(Guid userId);
     Task<PagedList<LikeDto>> GetUserLikes(LikesParams likeParams);
+    void DeleteLike(AppUserLike like);
 }

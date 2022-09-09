@@ -62,6 +62,11 @@ public class LikeService : ILikeService
         );
     }
 
+    public void DeleteLike(AppUserLike like)
+    {
+        _context.Likes.Remove(like);
+    }
+
     private static IQueryable<LikeDto> AddLikedByCurrentUserFlag(
         string predicate,
         IQueryable<AppUser> users,
