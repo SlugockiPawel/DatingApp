@@ -54,6 +54,40 @@ public class LikesController : BaseApiController
         return BadRequest("Failed to like user");
     }
 
+    [HttpDelete("{username}")]
+    public async Task<ActionResult> RemoveLike(string username)
+    {
+        var sourceUserId = User.GetUserId();
+        var dislikedUser = await _unitOfWork.UserService.GetUserByNameAsync(username);
+        var loggedUser = await _unitOfWork.LikeService.GetUserWithLikes(sourceUserId);
+
+        if (dislikedUser is null)
+        {
+            return NotFound();
+        }
+
+        if (loggedUser.UserName.Equals(username))
+        {
+            return BadRequest("You cannot dislike yourself");
+        }
+
+        var userLike = await _unitOfWork.LikeService.GetUserLike(sourceUserId, dislikedUser.Id);
+
+        if (userLike is null)
+        {
+            return BadRequest("You already disliked this user");
+        }
+
+        _unitOfWork.LikeService.DeleteLike(userLike);
+
+        if (await _unitOfWork.Complete())
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Failed to dislike the user");
+    }
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<LikeDto>>> GetUserLikes(
         [FromQuery] LikesParams likesParams
