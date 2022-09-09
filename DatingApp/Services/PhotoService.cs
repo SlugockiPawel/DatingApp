@@ -39,8 +39,8 @@ public class PhotoService : IPhotoService
             {
                 File = new FileDescription(file.FileName, stream),
                 Transformation = new Transformation()
-                    .Height(500)
-                    .Width(500)
+                    .Height(450)
+                    .Width(450)
                     .Crop("fill")
                     .Gravity("face")
             };
