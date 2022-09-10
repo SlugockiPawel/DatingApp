@@ -36,12 +36,11 @@ public class UsersController : BaseApiController
 
         var currentUser = await _unitOfWork.UserService.GetUserByNameAsync(username);
 
-
         if (string.IsNullOrWhiteSpace(userParams.Gender))
             userParams.Gender = gender == "male" ? "female" : "male";
 
         var users = await _unitOfWork.UserService.GetMembersAsync(userParams);
-        
+
         foreach (var user in users)
         {
             user.LikedByCurrentUser = currentUser.LikedUsers.Any(ul => ul.LikedUserId == user.Id);
@@ -53,7 +52,7 @@ public class UsersController : BaseApiController
             users.TotalCount,
             users.TotalPages
         );
-        
+
         return Ok(users);
     }
 
@@ -94,6 +93,12 @@ public class UsersController : BaseApiController
     public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
     {
         var user = await _unitOfWork.UserService.GetUserByNameAsync(User.GetUserName());
+
+        if (user.Photos.Count >= 4)
+        {
+            return BadRequest("ailed to upload photo - Max user photo count is 4");
+        }
+
         var result = await _unitOfWork.PhotoService.AddPhotoAsync(file);
         if (result.Error is not null)
         {
