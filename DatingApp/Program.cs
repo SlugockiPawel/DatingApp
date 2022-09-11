@@ -61,7 +61,3 @@ app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/message");
 
 app.Run();
-
-
-// TODO add rate limiter for registering user (1 per day?)
-// TODO add rate limiter to photo upload (2 req per day?) - limit max photo per request to 3
