@@ -1,24 +1,26 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-test-errors',
   templateUrl: './test-errors.component.html',
-  styleUrls: ['./test-errors.component.css']
+  styleUrls: ['./test-errors.component.css'],
 })
 export class TestErrorsComponent implements OnInit {
   baseUrl = environment.apiUrl;
   validationErrors: string[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
 
   get404Error() {
     this.http.get(this.baseUrl + 'buggy/not-found').subscribe({
-      next: (response) => console.log(response),
-      error: (error) => {
+      next: response => console.log(response),
+      error: error => {
         this.correctErrorStatusText(error);
         console.log(error);
       },
@@ -27,8 +29,8 @@ export class TestErrorsComponent implements OnInit {
 
   get400Error() {
     this.http.get(this.baseUrl + 'buggy/bad-request').subscribe({
-      next: (response) => console.log(response),
-      error: (error) => {
+      next: response => console.log(response),
+      error: error => {
         this.correctErrorStatusText(error);
         console.log(error);
       },
@@ -37,8 +39,8 @@ export class TestErrorsComponent implements OnInit {
 
   get500Error() {
     this.http.get(this.baseUrl + 'buggy/server-error').subscribe({
-      next: (response) => console.log(response),
-      error: (error) => {
+      next: response => console.log(response),
+      error: error => {
         this.correctErrorStatusText(error);
         console.log(error);
       },
@@ -47,8 +49,8 @@ export class TestErrorsComponent implements OnInit {
 
   get401Error() {
     this.http.get(this.baseUrl + 'Buggy/auth').subscribe({
-      next: (response) => console.log(response),
-      error: (error) => {
+      next: response => console.log(response),
+      error: error => {
         this.correctErrorStatusText(error);
         console.log(error);
       },
@@ -57,8 +59,8 @@ export class TestErrorsComponent implements OnInit {
 
   get400ValidationError() {
     this.http.post(this.baseUrl + 'account/register', {}).subscribe({
-      next: (response) => console.log(response),
-      error: (error) => {
+      next: response => console.log(response),
+      error: error => {
         this.correctErrorStatusText(error);
         this.validationErrors = error;
         console.log(error);
@@ -67,22 +69,21 @@ export class TestErrorsComponent implements OnInit {
   }
 
   private correctErrorStatusText(error) {
-    if(error.statusText !== 'OK') {
+    if (error.statusText !== 'OK') {
       return error.statusText;
     }
 
     switch (error.status) {
       case 500:
-        return error.statusText = error.statusText = "Internal Server Error";
+        return error.statusText = error.statusText = 'Internal Server Error';
       case 400:
-        return error.statusText = error.statusText = "Bad Request";
+        return error.statusText = error.statusText = 'Bad Request';
       case 401:
-        return error.statusText = error.statusText = "Unauthorized";
+        return error.statusText = error.statusText = 'Unauthorized';
       case 404:
-        return error.statusText = error.statusText = "Not Found";
+        return error.statusText = error.statusText = 'Not Found';
       default:
-      break;
+        break;
     }
   }
-
 }

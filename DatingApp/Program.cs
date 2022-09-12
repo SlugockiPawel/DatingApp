@@ -56,8 +56,9 @@ app.UseCors(policy =>
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseIpRateLimiting();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
