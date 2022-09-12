@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace DatingApp.SignalR;
 
 // TODO make message hub authorized?
-public class MessageHub : Hub
+public sealed class MessageHub : Hub
 {
     private readonly IMapper _mapper;
     private readonly IHubContext<PresenceHub> _presenceHubContext;

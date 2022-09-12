@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DatingApp.Controllers;
 
 [Authorize]
-public class LikesController : BaseApiController
+public sealed class LikesController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
 

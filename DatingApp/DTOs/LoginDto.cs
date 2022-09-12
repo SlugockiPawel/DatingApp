@@ -2,7 +2,7 @@
 
 namespace DatingApp.DTOs;
 
-public class LoginDto
+public sealed class LoginDto
 {
     [Required] public string UserName { get; set; }
 

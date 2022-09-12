@@ -2,7 +2,7 @@
 
 namespace DatingApp.Models;
 
-public class AppUser : IdentityUser<Guid>
+public sealed class AppUser : IdentityUser<Guid>
 {
     public DateTime DateOfBirth { get; set; }
     public string KnownAs { get; set; }
@@ -16,13 +16,13 @@ public class AppUser : IdentityUser<Guid>
     public string Country { get; set; }
 
     // Navigation property 1 User => many Photos
-    public virtual ICollection<Photo> Photos { get; set; }
+    public ICollection<Photo> Photos { get; set; }
 
     // users that likes currently logged in user
-    public virtual ICollection<AppUserLike> LikedByUsers { get; set; }
+    public ICollection<AppUserLike> LikedByUsers { get; set; }
 
     // users that are liked by currently logged in user
-    public virtual ICollection<AppUserLike> LikedUsers { get; set; }
+    public ICollection<AppUserLike> LikedUsers { get; set; }
 
     public ICollection<Message> MessagesSent { get; set; }
     public ICollection<Message> MessagesRecieved { get; set; }

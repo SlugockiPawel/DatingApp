@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace DatingApp.SignalR;
 
 [Authorize]
-public class PresenceHub : Hub
+public sealed class PresenceHub : Hub
 {
     private readonly PresenceTracker _presenceTracker;
 

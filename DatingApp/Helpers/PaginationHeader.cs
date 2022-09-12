@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.Helpers;
 
-public class PaginationHeader
+public sealed class PaginationHeader
 {
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }

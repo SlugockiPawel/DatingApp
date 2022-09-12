@@ -1,6 +1,6 @@
 namespace DatingApp.Models;
 
-public class Connection
+public sealed class Connection
 {
     public Connection()
     {

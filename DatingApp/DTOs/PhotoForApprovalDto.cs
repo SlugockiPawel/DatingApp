@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.DTOs;
 
-public class PhotoForApprovalDto
+public sealed class PhotoForApprovalDto
 {
     public int Id { get; set; }
     public bool IsApproved { get; set; }

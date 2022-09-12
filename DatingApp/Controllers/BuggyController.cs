@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.Controllers
 {
-    public class BuggyController : BaseApiController
+    public sealed class BuggyController : BaseApiController
     {
         private readonly ApplicationDbContext _context;
 

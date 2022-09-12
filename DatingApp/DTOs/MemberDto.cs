@@ -2,7 +2,7 @@
 
 namespace DatingApp.DTOs;
 
-public class MemberDto
+public sealed class MemberDto
 {
     public Guid Id { get; set; }
     public string UserName { get; set; }

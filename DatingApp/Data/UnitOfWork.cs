@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace DatingApp.Data;
 
-public class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork
 {
     private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
     private readonly ApplicationDbContext _context;

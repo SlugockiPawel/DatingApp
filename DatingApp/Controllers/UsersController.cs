@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DatingApp.Controllers;
 
 [Authorize]
-public class UsersController : BaseApiController
+public sealed class UsersController : BaseApiController
 {
     private readonly IMapper _mapper;
 

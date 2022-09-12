@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.Models;
 
-public class Message
+public sealed class Message
 {
     public int Id { get; set; }
     public Guid SenderId { get; set; }

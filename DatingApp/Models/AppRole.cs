@@ -2,7 +2,7 @@
 
 namespace DatingApp.Models;
 
-public class AppRole : IdentityRole<Guid>
+public sealed class AppRole : IdentityRole<Guid>
 {
     public ICollection<AppUserRole> UserRoles { get; set; }
 }

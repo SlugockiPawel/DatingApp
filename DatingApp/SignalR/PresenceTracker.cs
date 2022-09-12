@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.SignalR;
 
-public class PresenceTracker
+public sealed class PresenceTracker
 {
     private static readonly Dictionary<string, List<string>> OnlineUsers = new();
 

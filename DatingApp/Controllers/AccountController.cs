@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Controllers;
 
-public class AccountController : BaseApiController
+public sealed class AccountController : BaseApiController
 {
     private readonly IMapper _mapper;
     private readonly SignInManager<AppUser> _signInManager;

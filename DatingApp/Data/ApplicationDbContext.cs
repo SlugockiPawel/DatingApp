@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatingApp.Data;
 
-public class ApplicationDbContext
+public sealed class ApplicationDbContext
     : IdentityDbContext<
         AppUser,
         AppRole,

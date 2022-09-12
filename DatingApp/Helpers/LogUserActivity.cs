@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DatingApp.Helpers;
 
-public class LogUserActivity : IAsyncActionFilter
+public sealed class LogUserActivity : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(
         ActionExecutingContext context,

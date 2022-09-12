@@ -3,7 +3,7 @@
 namespace DatingApp.Models;
 
 [Table("Photos")]
-public class Photo
+public sealed class Photo
 {
     public int Id { get; set; }
     public string Url { get; set; }
@@ -12,6 +12,6 @@ public class Photo
     public bool IsApproved { get; set; }
 
     // Navigation property 1 User => many photos
-    public virtual AppUser AppUser { get; set; }
+    public AppUser AppUser { get; set; }
     public Guid AppUserId { get; set; }
 }

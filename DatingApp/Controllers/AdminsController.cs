@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Controllers;
 
-public class AdminsController : BaseApiController
+public sealed class AdminsController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<AppUser> _userManager;

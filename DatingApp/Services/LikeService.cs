@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Services;
 
-public class LikeService : ILikeService
+public sealed class LikeService : ILikeService
 {
     private readonly ApplicationDbContext _context;
 

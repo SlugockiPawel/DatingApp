@@ -2,7 +2,7 @@
 
 namespace DatingApp.DTOs;
 
-public class MessageDto
+public sealed class MessageDto
 {
     public int Id { get; set; }
     public Guid SenderId { get; set; }

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DatingApp.Controllers;
 
 [Authorize]
-public class MessagesController : BaseApiController
+public sealed class MessagesController : BaseApiController
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.Models;
 
-public class AppUserLike
+public sealed class AppUserLike
 {
     public AppUser SourceUser { get; set; }
     public Guid SourceUserId { get; set; }

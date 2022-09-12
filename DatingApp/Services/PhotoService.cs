@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace DatingApp.Services;
 
-public class PhotoService : IPhotoService
+public sealed class PhotoService : IPhotoService
 {
     private readonly Cloudinary _cloudinary;
     private readonly ApplicationDbContext _context;

@@ -2,7 +2,7 @@
 
 namespace DatingApp.Models;
 
-public class Group
+public sealed class Group
 {
     public Group()
     {

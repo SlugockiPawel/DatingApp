@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Services;
 
-public class UserServicePostgres : IUserService
+public sealed class UserServicePostgres : IUserService
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;

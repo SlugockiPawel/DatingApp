@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.DTOs;
 
-public class LikeDto
+public sealed class LikeDto
 {
     public Guid UserId { get; set; }
     public string UserName { get; set; }

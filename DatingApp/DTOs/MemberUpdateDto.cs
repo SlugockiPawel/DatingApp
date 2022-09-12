@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.DTOs
 {
-    public class MemberUpdateDto
+    public sealed class MemberUpdateDto
     {
         public string Introduction { get; set; }
         public string LookingFor { get; set; }

@@ -5,7 +5,7 @@ using DatingApp.Models;
 
 namespace DatingApp.Helpers;
 
-public class AutoMapperProfiles : Profile
+public sealed class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {

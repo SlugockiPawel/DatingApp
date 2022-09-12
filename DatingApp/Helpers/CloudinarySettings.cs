@@ -1,6 +1,6 @@
 ﻿namespace DatingApp.Helpers;
 
-public class CloudinarySettings
+public sealed class CloudinarySettings
 {
     public string CloudName { get; set; }
     public string ApiKey { get; set; }

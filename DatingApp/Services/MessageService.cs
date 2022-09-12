@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Services;
 
-public class MessageService : IMessageService
+public sealed class MessageService : IMessageService
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
