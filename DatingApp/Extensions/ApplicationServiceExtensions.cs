@@ -1,4 +1,5 @@
-﻿using DatingApp.Data;
+﻿using AspNetCoreRateLimit;
+using DatingApp.Data;
 using DatingApp.Helpers;
 using DatingApp.Services;
 using DatingApp.Services.Interfaces;
@@ -18,6 +19,42 @@ public static class ApplicationServiceExtensions
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                 )
         );
+
+        builder.Services.AddOptions();
+        builder.Services.AddMemoryCache();
+
+        builder.Services.Configure<IpRateLimitOptions>(options =>
+        {
+            options.EnableEndpointRateLimiting = true;
+            options.StackBlockedRequests = false;
+            options.HttpStatusCode = 429;
+            options.RealIpHeader = "X-Real-IP";
+            options.ClientIdHeader = "X-ClientId";
+            options.GeneralRules = new List<RateLimitRule>
+            {
+                new()
+                {
+                    Endpoint = "*",
+                    Period = "30s",
+                    Limit = 15
+                },
+                new()
+                {
+                    Endpoint = "post:/api/account/register",
+                    Period = "3h",
+                    Limit = 2
+                },
+                new()
+                {
+                    Endpoint = "post:/api/users/add-photo",
+                    Period = "3h",
+                    Limit = 5
+                }
+            };
+        });
+
+        builder.Services.AddInMemoryRateLimiting();
+        builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
         builder.Services.AddSingleton<PresenceTracker>();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();

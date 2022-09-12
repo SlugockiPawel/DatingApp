@@ -1,13 +1,17 @@
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest,} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {NavigationExtras, Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
-import {catchError, Observable, throwError} from 'rxjs';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private toastr: ToastrService) {
-  }
+  constructor(private router: Router, private toastr: ToastrService) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -19,6 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.correctErrorStatusText(error);
           switch (error.status) {
             case 400:
+            case 429:
               if (error.error.errors) {
                 const modalStateErrors = [];
                 for (const key in error.error.errors) {
@@ -41,7 +46,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
             case 500:
               const navigationExtras: NavigationExtras = {
-                state: {error: error.error},
+                state: { error: error.error },
               };
               this.router.navigateByUrl('/server-error', navigationExtras);
               break;
@@ -70,6 +75,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         return (error.statusText = error.statusText = 'Unauthorized');
       case 404:
         return (error.statusText = error.statusText = 'Not Found');
+      case 429:
+        return (error.statusText = error.statusText = 'Too Many Requests');
       default:
         break;
     }

@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using DatingApp.Data;
 using DatingApp.Extensions;
 using DatingApp.Helpers;
@@ -55,6 +56,8 @@ app.UseCors(policy =>
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseIpRateLimiting();
 
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
