@@ -1,54 +1,52 @@
 ﻿using DatingApp.Data;
 using DatingApp.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DatingApp.Controllers
+namespace DatingApp.Controllers;
+
+public sealed class BuggyController : BaseApiController
 {
-    public sealed class BuggyController : BaseApiController
+    private readonly ApplicationDbContext _context;
+
+    public BuggyController(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
+        _context = context;
+    }
 
-        public BuggyController(ApplicationDbContext context)
+    [Authorize]
+    [HttpGet("auth")]
+    public ActionResult<string> GetSecret()
+    {
+        return "secret text";
+    }
+
+    [HttpGet("not-found")]
+    public ActionResult<AppUser> GetNotFound()
+    {
+        var thing = _context.Users.Find(Guid.NewGuid());
+
+        if (thing is null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [Authorize]
-        [HttpGet("auth")]
-        public ActionResult<string> GetSecret()
-        {
-            return "secret text";
-        }
+        return Ok(thing);
+    }
 
-        [HttpGet("not-found")]
-        public ActionResult<AppUser> GetNotFound()
-        {
-            var thing = _context.Users.Find(Guid.NewGuid());
+    [HttpGet("server-error")]
+    public ActionResult<string> GetServerError()
+    {
+        var thing = _context.Users.Find(Guid.NewGuid());
 
-            if (thing is null)
-            {
-                return NotFound();
-            }
+        var thingToReturn = thing?.ToString();
 
-            return Ok(thing);
-        }
+        return thingToReturn;
+    }
 
-        [HttpGet("server-error")]
-        public ActionResult<string> GetServerError()
-        {
-            var thing = _context.Users.Find(Guid.NewGuid());
-
-            var thingToReturn = thing.ToString();
-
-            return thingToReturn;
-        }
-
-        [HttpGet("bad-request")]
-        public ActionResult<string> GetBadRequest()
-        {
-            return BadRequest("This was not a good request");
-        }
+    [HttpGet("bad-request")]
+    public ActionResult<string> GetBadRequest()
+    {
+        return BadRequest("This was not a good request");
     }
 }

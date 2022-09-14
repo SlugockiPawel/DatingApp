@@ -1,6 +1,4 @@
-﻿using DatingApp.Models;
-
-namespace DatingApp.DTOs;
+﻿namespace DatingApp.DTOs;
 
 public sealed class MemberDto
 {

@@ -33,7 +33,6 @@ public sealed class LikeService : ILikeService
     {
         var users = _context.Users.OrderBy(u => u.UserName).AsQueryable();
         var likes = _context.Likes.AsQueryable();
-        IQueryable<LikeDto> likedUsers;
         var loggedUserLikes = likes.Where(like => like.SourceUserId.Equals(likesParams.UserId));
 
         switch (likesParams.Predicate)
@@ -48,10 +47,9 @@ public sealed class LikeService : ILikeService
                 break;
         }
 
-        likedUsers = AddLikedByCurrentUserFlag(
+        var likedUsers = AddLikedByCurrentUserFlag(
             likesParams.Predicate,
             users,
-            loggedUserLikes,
             likesParams.UserId
         );
 
@@ -70,7 +68,6 @@ public sealed class LikeService : ILikeService
     private static IQueryable<LikeDto> AddLikedByCurrentUserFlag(
         string predicate,
         IQueryable<AppUser> users,
-        IQueryable<AppUserLike> loggedUserLikes,
         Guid loggedUserId
     )
     {
