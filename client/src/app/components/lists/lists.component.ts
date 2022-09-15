@@ -15,7 +15,7 @@ export class ListsComponent implements OnInit {
   pageSize = 5;
   pagination: Pagination;
 
-  constructor(private readonly memberService: MembersService) {
+  constructor(private readonly membersService: MembersService) {
   }
 
   ngOnInit() {
@@ -23,7 +23,7 @@ export class ListsComponent implements OnInit {
   }
 
   loadLikes() {
-    this.memberService
+    this.membersService
       .getLikes(this.predicate, this.pageNumber, this.pageSize)
       .subscribe(response => {
         this.members = response.result;
@@ -41,5 +41,9 @@ export class ListsComponent implements OnInit {
       this.members.findIndex(m => m.userName === $event),
       1
     );
+
+    if (this.membersService.memberCache.size > 0) {
+      this.membersService.memberCache.clear();
+    }
   }
 }
