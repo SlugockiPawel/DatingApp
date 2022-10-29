@@ -27,23 +27,23 @@
 
 <div class="row mt-1 ">
 
-  <form #form="ngForm" (ngSubmit)="loadMembers()" class="form-inline mb-3">
-    <div class="col-12 col-xl-6 custom-flex mt-2  ">
-      <div class="form-group">
+  <form #form="ngForm" (ngSubmit)="loadMembers()" class="form-inline mb-3 px-0">
+    <div class="col-12 col-xl-8 custom-flex mt-2 flex-wrap ">
+      <div class="form-group mt-1">
         <label class="mr-2">Age from:</label>
         <input [(ngModel)]="userParams.minAge" [min]="18" class="form-control pl-3" name="minAge"
                style="width: 90px; height:50px;"
                type="number">
       </div>
 
-      <div class="form-group custom-padding">
+      <div class="form-group custom-padding mt-1">
         <label class="mr-2">Age to:</label>
         <input [(ngModel)]="userParams.maxAge" class="form-control pl-3" name="maxAge"
                style="width: 90px; height:50px;"
                type="number">
       </div>
 
-      <div class="form-group pe-2">
+      <div class="form-group pe-2 mt-1">
         <label class="mr-2">Show:</label>
         <select [(ngModel)]="userParams.gender" class="form-select pl-3" name="gender"
                 style="width: 150px; height:50px;"
@@ -66,7 +66,7 @@
 </div>
 
 
-<div class="container">
+<div class="container px-0">
   <div class="row row-cols-auto  justify-content-center justify-content-sm-start">
     <div *ngFor="let member of members" class="col">
       <p>
