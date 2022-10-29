@@ -2,9 +2,19 @@
   <h3 class="fs-5">Loading...</h3>
 </ngx-spinner>
 
-<app-nav></app-nav>
 
-<div class="container" style="margin-top: 100px;">
-  <router-outlet></router-outlet>
+<div class="page-wrapper mx-1">
+  <div class="sticky-header">
+    <app-nav></app-nav>
+  </div>
+
+  <div class="content-wrapper mt-4 container">
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+
+    <div class="footer">
+      <app-footer></app-footer>
+    </div>
+  </div>
 </div>
-
