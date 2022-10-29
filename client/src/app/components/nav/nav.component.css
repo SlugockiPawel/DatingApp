@@ -10,3 +10,7 @@ img {
 .toggler-background {
   background-color: #dc307c;
 }
+
+nav.navbar {
+  opacity: 95%;
+}
