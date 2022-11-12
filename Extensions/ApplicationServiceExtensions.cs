@@ -5,6 +5,7 @@ using DatingApp.Services;
 using DatingApp.Services.Interfaces;
 using DatingApp.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace DatingApp.Extensions;
 
@@ -24,20 +25,19 @@ public static class ApplicationServiceExtensions
             }
             else
             {
-                var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+                var databaseUri = new Uri(Environment.GetEnvironmentVariable("DATABASE_URL")!);
+                var userInfo = databaseUri.UserInfo.Split(':');
 
-                connUrl = connUrl?.Replace("postgres://", string.Empty);
-                var pgUserPass = connUrl?.Split("@")[0];
-                var pgHostPortDb = connUrl?.Split("@")[1];
-                var pgHostPort = pgHostPortDb?.Split("/")[0];
-                var pgDb = pgHostPortDb?.Split("/")[1];
-                var pgUser = pgUserPass?.Split(":")[0];
-                var pgPass = pgUserPass?.Split(":")[1];
-                var pgHost = pgHostPort?.Split(":")[0];
-                var pgPort = pgHostPort?.Split(":")[1];
-
-                connStr =
-                    $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
+                connStr = new NpgsqlConnectionStringBuilder()
+                {
+                    Host = databaseUri.Host,
+                    Port = databaseUri.Port,
+                    Username = userInfo[0],
+                    Password = userInfo[1],
+                    Database = databaseUri.LocalPath.TrimStart('/'),
+                    SslMode = SslMode.Require,
+                    TrustServerCertificate = true,
+                }.ToString();
             }
 
             options.UseNpgsql(
