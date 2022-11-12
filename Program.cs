@@ -6,7 +6,6 @@ using DatingApp.Middleware;
 using DatingApp.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.AddApplicationServices(); // custom extension method ApplicationServiceExtensions to clean up Program.cs
